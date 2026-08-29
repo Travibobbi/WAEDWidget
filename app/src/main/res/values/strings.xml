@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WA ED Widget</string>
+    <string name="widget_description">Live WA metropolitan emergency department activity</string>
+</resources>

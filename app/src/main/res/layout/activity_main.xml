@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#F4F7F5">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="WA ED Widget"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#15211B" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Shows WA Health metropolitan ED activity on your home screen. The wait figure is the published average waiting time for Triage Category 4 patients, not an individual prediction."
+        android:textSize="16sp"
+        android:lineSpacingExtra="3dp"
+        android:textColor="#334039" />
+
+    <Button
+        android:id="@+id/add_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Add widget to home screen" />
+
+    <Button
+        android:id="@+id/open_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Open WA Health source" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Data source: WA Department of Health. Auto-refresh is requested every 30 minutes; Android may delay background widget updates to conserve battery. Tap ↻ on the widget for a manual refresh."
+        android:textSize="13sp"
+        android:textColor="#5C6B63" />
+</LinearLayout>
