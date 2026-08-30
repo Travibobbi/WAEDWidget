@@ -7,11 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import org.json.JSONArray;
@@ -28,6 +23,7 @@ public class EdWidgetProvider extends AppWidgetProvider {
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
     private static final int[] HOSPITAL_IDS = {R.id.hospital_1,R.id.hospital_2,R.id.hospital_3,R.id.hospital_4,R.id.hospital_5,R.id.hospital_6,R.id.hospital_7,R.id.hospital_8,R.id.hospital_9,R.id.hospital_10};
+    private static final int[] INDICATOR_IDS = {R.id.indicator_1,R.id.indicator_2,R.id.indicator_3,R.id.indicator_4,R.id.indicator_5,R.id.indicator_6,R.id.indicator_7,R.id.indicator_8,R.id.indicator_9,R.id.indicator_10};
     private static final int[] WAIT_IDS = {R.id.wait_1,R.id.wait_2,R.id.wait_3,R.id.wait_4,R.id.wait_5,R.id.wait_6,R.id.wait_7,R.id.wait_8,R.id.wait_9,R.id.wait_10};
     private static final int[] WAITING_IDS = {R.id.waiting_1,R.id.waiting_2,R.id.waiting_3,R.id.waiting_4,R.id.waiting_5,R.id.waiting_6,R.id.waiting_7,R.id.waiting_8,R.id.waiting_9,R.id.waiting_10};
     private static final int[] TOTAL_IDS = {R.id.total_1,R.id.total_2,R.id.total_3,R.id.total_4,R.id.total_5,R.id.total_6,R.id.total_7,R.id.total_8,R.id.total_9,R.id.total_10};
@@ -98,6 +94,11 @@ public class EdWidgetProvider extends AppWidgetProvider {
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent infoPi = PendingIntent.getActivity(context, 1003, info, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         rv.setOnClickPendingIntent(R.id.info, infoPi);
+
+        Intent history = new Intent(context, HistoryActivity.class)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent historyPi = PendingIntent.getActivity(context, 1004, history, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        rv.setOnClickPendingIntent(R.id.history, historyPi);
         return rv;
     }
 
@@ -105,6 +106,7 @@ public class EdWidgetProvider extends AppWidgetProvider {
         RemoteViews rv = baseViews(context);
         for (int i=0;i<10;i++) {
             rv.setTextViewText(HOSPITAL_IDS[i], "—");
+            rv.setTextViewText(INDICATOR_IDS[i], "");
             rv.setTextViewText(WAIT_IDS[i], "—");
             rv.setTextViewText(WAITING_IDS[i], "—");
             rv.setTextViewText(TOTAL_IDS[i], "—");
@@ -115,7 +117,9 @@ public class EdWidgetProvider extends AppWidgetProvider {
             for (int i=0;i<Math.min(10, data.hospitals.size());i++) {
                 EdData.Hospital h = data.hospitals.get(i);
                 rv.setTextViewText(HOSPITAL_IDS[i], h.shortName);
-                rv.setTextViewText(WAIT_IDS[i], formatWait(context, h.triage4Minutes, failed));
+                rv.setTextViewText(INDICATOR_IDS[i], "●");
+                rv.setTextColor(INDICATOR_IDS[i], context.getColor(failed ? R.color.widget_muted : waitColor(h.triage4Minutes)));
+                rv.setTextViewText(WAIT_IDS[i], h.triage4Minutes + "m");
                 rv.setTextViewText(WAITING_IDS[i], String.valueOf(h.waiting));
                 rv.setTextViewText(TOTAL_IDS[i], String.valueOf(h.total));
                 rv.setTextViewText(TREND_IDS[i], formatTrend(h.totalChange));
@@ -173,11 +177,4 @@ public class EdWidgetProvider extends AppWidgetProvider {
         return R.color.wait_well_over_target;
     }
 
-    private static CharSequence formatWait(Context context, int minutes, boolean cached) {
-        SpannableString text = new SpannableString("● " + minutes + "m");
-        int colorResource = cached ? R.color.widget_muted : waitColor(minutes);
-        text.setSpan(new ForegroundColorSpan(context.getColor(colorResource)), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new RelativeSizeSpan(1.65f), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return text;
-    }
 }

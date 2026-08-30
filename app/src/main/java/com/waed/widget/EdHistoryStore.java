@@ -42,6 +42,56 @@ final class EdHistoryStore extends SQLiteOpenHelper {
         // Future schema upgrades must preserve the append-only history.
     }
 
+    static final class HospitalOption {
+        final String fullName;
+        final String shortName;
+
+        HospitalOption(String fullName, String shortName) {
+            this.fullName = fullName;
+            this.shortName = shortName;
+        }
+
+        @Override public String toString() {
+            return shortName;
+        }
+    }
+
+    static final class HistoryPoint {
+        final long recordedAt;
+        final int triage4Minutes;
+
+        HistoryPoint(long recordedAt, int triage4Minutes) {
+            this.recordedAt = recordedAt;
+            this.triage4Minutes = triage4Minutes;
+        }
+    }
+
+    List<HospitalOption> loadHospitals() {
+        List<HospitalOption> hospitals = new ArrayList<>();
+        String sql = "SELECT hospital_name, MAX(short_name) FROM readings GROUP BY hospital_name ORDER BY hospital_name";
+        try (Cursor cursor = getReadableDatabase().rawQuery(sql, null)) {
+            while (cursor.moveToNext()) {
+                hospitals.add(new HospitalOption(cursor.getString(0), cursor.getString(1)));
+            }
+        }
+        return hospitals;
+    }
+
+    List<HistoryPoint> loadHistory(String hospitalName, int days) {
+        List<HistoryPoint> points = new ArrayList<>();
+        long cutoff = System.currentTimeMillis() - days * 24L * 60L * 60L * 1000L;
+        String sql = "SELECT s.recorded_at, r.triage4_minutes FROM readings r "
+            + "JOIN snapshots s ON s.id = r.snapshot_id "
+            + "WHERE r.hospital_name = ? AND s.recorded_at >= ? ORDER BY s.recorded_at";
+        try (Cursor cursor = getReadableDatabase().rawQuery(sql,
+            new String[]{hospitalName, String.valueOf(cutoff)})) {
+            while (cursor.moveToNext()) {
+                points.add(new HistoryPoint(cursor.getLong(0), cursor.getInt(1)));
+            }
+        }
+        return points;
+    }
+
     void seedIfEmpty(EdData cached) {
         if (cached == null) return;
         SQLiteDatabase db = getReadableDatabase();

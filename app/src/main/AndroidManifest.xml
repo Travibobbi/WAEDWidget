@@ -17,6 +17,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".EdWidgetProvider"
             android:exported="true">
