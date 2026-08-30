@@ -1,5 +1,7 @@
 # WA ED Widget
 
+Current version: **1.1.0**
+
 Small native Android home-screen widget that reads the public WA Department of Health Emergency Department live activity page.
 
 ## Displays
@@ -7,14 +9,16 @@ Small native Android home-screen widget that reads the public WA Department of H
 - Published average wait for Triage Category 4 patients
 - Number of patients waiting to be seen
 - Total patients in ED
-- Queue pressure / waiting share (`waiting / total × 100`), which is not a capacity measure
+- Total-patient trend since the previous distinct WA Health update (`↑ +N`, `→ 0`, or `↓ −N`)
 - WA Health source timestamp
 
 ## Behaviour
 - Android widget update requested every 30 minutes (OS may defer background updates)
 - Tap the ↻ icon to manually refresh
 - Tap `WA ED STATUS` to open the official WA Health page
-- Last successful response is cached; if refresh fails, the widget keeps showing cached data and labels it as cached
+- Last successful response and its trend are cached; if refresh fails, the widget keeps showing cached data and labels it as cached
+- Every distinct WA Health snapshot is retained indefinitely in the app's private SQLite database
+- History requires no account, server, companion app, or storage permission; uninstalling the app or clearing its data removes it
 - No accounts, analytics, tracking, advertising, or personal data
 
 ## Source

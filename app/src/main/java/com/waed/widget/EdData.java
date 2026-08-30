@@ -17,13 +17,19 @@ final class EdData {
         final int triage4Minutes;
         final int waiting;
         final int total;
+        final Integer totalChange;
 
         Hospital(String fullName, String shortName, int triage4Minutes, int waiting, int total) {
+            this(fullName, shortName, triage4Minutes, waiting, total, null);
+        }
+
+        Hospital(String fullName, String shortName, int triage4Minutes, int waiting, int total, Integer totalChange) {
             this.fullName = fullName;
             this.shortName = shortName;
             this.triage4Minutes = triage4Minutes;
             this.waiting = waiting;
             this.total = total;
+            this.totalChange = totalChange;
         }
     }
 }

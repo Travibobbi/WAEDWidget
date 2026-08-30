@@ -27,7 +27,7 @@ public class EdWidgetProvider extends AppWidgetProvider {
     private static final int[] WAIT_IDS = {R.id.wait_1,R.id.wait_2,R.id.wait_3,R.id.wait_4,R.id.wait_5,R.id.wait_6,R.id.wait_7,R.id.wait_8,R.id.wait_9,R.id.wait_10};
     private static final int[] WAITING_IDS = {R.id.waiting_1,R.id.waiting_2,R.id.waiting_3,R.id.waiting_4,R.id.waiting_5,R.id.waiting_6,R.id.waiting_7,R.id.waiting_8,R.id.waiting_9,R.id.waiting_10};
     private static final int[] TOTAL_IDS = {R.id.total_1,R.id.total_2,R.id.total_3,R.id.total_4,R.id.total_5,R.id.total_6,R.id.total_7,R.id.total_8,R.id.total_9,R.id.total_10};
-    private static final int[] PRESSURE_IDS = {R.id.pressure_1,R.id.pressure_2,R.id.pressure_3,R.id.pressure_4,R.id.pressure_5,R.id.pressure_6,R.id.pressure_7,R.id.pressure_8,R.id.pressure_9,R.id.pressure_10};
+    private static final int[] TREND_IDS = {R.id.trend_1,R.id.trend_2,R.id.trend_3,R.id.trend_4,R.id.trend_5,R.id.trend_6,R.id.trend_7,R.id.trend_8,R.id.trend_9,R.id.trend_10};
 
     @Override public void onUpdate(Context context, AppWidgetManager manager, int[] appWidgetIds) {
         super.onUpdate(context, manager, appWidgetIds);
@@ -49,7 +49,13 @@ public class EdWidgetProvider extends AppWidgetProvider {
         EXECUTOR.execute(() -> {
             try {
                 for (int id : ids) setStatus(context, manager, id, "Refreshing…");
-                EdData data = WaHealthClient.fetch();
+                EdData data;
+                try (EdHistoryStore history = new EdHistoryStore(context)) {
+                    // Preserve the pre-database cache as the first historical point
+                    // when an existing installation upgrades to history storage.
+                    history.seedIfEmpty(load(context));
+                    data = history.addTrendsAndRecord(WaHealthClient.fetch());
+                }
                 save(context, data);
                 for (int id : ids) render(context, manager, id, data, false, null);
             } catch (Exception ex) {
@@ -92,7 +98,7 @@ public class EdWidgetProvider extends AppWidgetProvider {
             rv.setTextViewText(WAIT_IDS[i], "—");
             rv.setTextViewText(WAITING_IDS[i], "—");
             rv.setTextViewText(TOTAL_IDS[i], "—");
-            rv.setTextViewText(PRESSURE_IDS[i], "—");
+            rv.setTextViewText(TREND_IDS[i], "—");
         }
 
         if (data != null) {
@@ -102,12 +108,10 @@ public class EdWidgetProvider extends AppWidgetProvider {
                 rv.setTextViewText(WAIT_IDS[i], h.triage4Minutes + "m");
                 rv.setTextViewText(WAITING_IDS[i], String.valueOf(h.waiting));
                 rv.setTextViewText(TOTAL_IDS[i], String.valueOf(h.total));
-                rv.setTextViewText(PRESSURE_IDS[i], h.total > 0
-                    ? Math.round((h.waiting * 100f) / h.total) + "%"
-                    : "—");
+                rv.setTextViewText(TREND_IDS[i], formatTrend(h.totalChange));
             }
             rv.setTextViewText(R.id.updated, (failed ? "Cached • " : "WA Health • ") + data.sourceTimestamp);
-            rv.setTextViewText(R.id.status, failed ? "Refresh failed — showing last saved data" : "Queue pressure = waiting share, not capacity • tap title for source");
+            rv.setTextViewText(R.id.status, failed ? "Refresh failed — showing last saved data" : "Trend = total change since prior WA Health update • tap title for source");
         } else {
             rv.setTextViewText(R.id.updated, failed ? "Couldn't load WA Health" : "Loading WA Health data…");
             rv.setTextViewText(R.id.status, failed ? "Tap ↻ to try again" : "WA Health • Triage 4 average");
@@ -121,6 +125,7 @@ public class EdWidgetProvider extends AppWidgetProvider {
             for (EdData.Hospital h : data.hospitals) {
                 JSONObject o = new JSONObject();
                 o.put("full", h.fullName); o.put("short", h.shortName); o.put("t4", h.triage4Minutes); o.put("waiting", h.waiting); o.put("total", h.total);
+                if (h.totalChange != null) o.put("totalChange", h.totalChange);
                 arr.put(o);
             }
             context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
@@ -137,9 +142,17 @@ public class EdWidgetProvider extends AppWidgetProvider {
             List<EdData.Hospital> list = new ArrayList<>();
             for (int i=0;i<arr.length();i++) {
                 JSONObject o = arr.getJSONObject(i);
-                list.add(new EdData.Hospital(o.getString("full"),o.getString("short"),o.getInt("t4"),o.getInt("waiting"),o.getInt("total")));
+                Integer totalChange = o.has("totalChange") ? o.getInt("totalChange") : null;
+                list.add(new EdData.Hospital(o.getString("full"),o.getString("short"),o.getInt("t4"),o.getInt("waiting"),o.getInt("total"),totalChange));
             }
             return new EdData(p.getString("timestamp", "saved data"), list);
         } catch (Exception ignored) { return null; }
+    }
+
+    private static String formatTrend(Integer change) {
+        if (change == null) return "—";
+        if (change > 0) return "↑ +" + change;
+        if (change < 0) return "↓ −" + Math.abs(change);
+        return "→ 0";
     }
 }

@@ -19,7 +19,7 @@
         <TextView android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="T4 avg" android:textStyle="bold" android:textSize="9sp" android:textColor="@color/widget_muted" />
         <TextView android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="Wait" android:textStyle="bold" android:textSize="9sp" android:textColor="@color/widget_muted" />
         <TextView android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="Total" android:textStyle="bold" android:textSize="9sp" android:textColor="@color/widget_muted" />
-        <TextView android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="Queue %" android:textStyle="bold" android:textSize="9sp" android:textColor="@color/widget_muted" />
+        <TextView android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="Trend" android:textStyle="bold" android:textSize="9sp" android:textColor="@color/widget_muted" />
     </LinearLayout>
 
         <LinearLayout
@@ -32,7 +32,7 @@
             <TextView android:id="@+id/wait_1" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_1" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_1" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_1" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_1" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
             <TextView android:id="@+id/wait_2" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_2" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_2" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_2" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_2" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,7 +56,7 @@
             <TextView android:id="@+id/wait_3" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_3" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_3" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_3" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_3" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,7 +68,7 @@
             <TextView android:id="@+id/wait_4" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_4" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_4" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_4" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_4" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,7 +80,7 @@
             <TextView android:id="@+id/wait_5" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_5" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_5" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_5" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_5" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,7 +92,7 @@
             <TextView android:id="@+id/wait_6" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_6" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_6" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_6" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_6" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,7 +104,7 @@
             <TextView android:id="@+id/wait_7" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_7" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_7" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_7" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_7" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -116,7 +116,7 @@
             <TextView android:id="@+id/wait_8" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_8" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_8" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_8" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_8" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -128,7 +128,7 @@
             <TextView android:id="@+id/wait_9" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_9" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_9" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_9" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_9" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -140,7 +140,7 @@
             <TextView android:id="@+id/wait_10" android:layout_width="46dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/waiting_10" android:layout_width="40dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
             <TextView android:id="@+id/total_10" android:layout_width="36dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textSize="11sp" android:textColor="@color/widget_text" />
-            <TextView android:id="@+id/pressure_10" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
+            <TextView android:id="@+id/trend_10" android:layout_width="52dp" android:layout_height="wrap_content" android:gravity="end" android:text="—" android:textStyle="bold" android:textSize="11sp" android:textColor="@color/widget_accent" />
         </LinearLayout>
-    <TextView android:id="@+id/status" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="5dp" android:text="Queue pressure = waiting share, not capacity" android:textSize="9sp" android:textColor="@color/widget_muted" />
+    <TextView android:id="@+id/status" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="5dp" android:text="Trend = total change since prior WA Health update" android:textSize="9sp" android:textColor="@color/widget_muted" />
 </LinearLayout>
