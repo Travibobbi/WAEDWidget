@@ -42,8 +42,8 @@ public class MainActivity extends Activity {
 
     private void showWaitColourInfo() {
         new AlertDialog.Builder(this)
-            .setTitle("Triage Category 4 wait colours")
-            .setMessage("The displayed wait is WA Health's published average for Triage Category 4 (ATS 4). ACEM's maximum target for ATS 4 assessment and treatment is 60 minutes.\n\n" +
+            .setTitle("Triage Category 4 wait indicator")
+            .setMessage("The large dot beside each T4 wait is based on WA Health's published average for Triage Category 4 (ATS 4). ACEM's maximum target for ATS 4 assessment and treatment is 60 minutes.\n\n" +
                 "Green — 0–30 min, within target\n" +
                 "Amber — 31–60 min, near target\n" +
                 "Red — 61–120 min, over target\n" +

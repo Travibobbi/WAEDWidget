@@ -1,6 +1,6 @@
 # WA ED Widget
 
-Current version: **1.2.0**
+Current version: **1.2.1**
 
 Small native Android home-screen widget that reads the public WA Department of Health Emergency Department live activity page.
 
@@ -10,13 +10,14 @@ Small native Android home-screen widget that reads the public WA Department of H
 - Number of patients waiting to be seen
 - Total patients in ED
 - Total-patient trend since the previous distinct WA Health update (`↑ +N`, `→ 0`, or `↓ −N`)
-- ATS 4 target-based colour coding across each row's numerical values and trend
+- Large ATS 4 target-based colour indicator beside each published wait
 - WA Health source timestamp
 
 ## Behaviour
 - Android widget update requested every 30 minutes (OS may defer background updates)
 - Tap the ↻ icon to manually refresh
 - Tap `WA ED STATUS` to open the official WA Health page
+- The `30 mins` column shows the total-patient change since the prior WA Health update
 - Tap `ⓘ` for the ATS 4 target, colour legend, and ACEM reference
 - Last successful response and its trend are cached; if refresh fails, the widget keeps showing cached data and labels it as cached
 - Every distinct WA Health snapshot is retained indefinitely in the app's private SQLite database

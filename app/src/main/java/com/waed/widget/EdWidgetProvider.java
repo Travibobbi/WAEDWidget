@@ -7,6 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -105,18 +109,16 @@ public class EdWidgetProvider extends AppWidgetProvider {
             rv.setTextViewText(WAITING_IDS[i], "—");
             rv.setTextViewText(TOTAL_IDS[i], "—");
             rv.setTextViewText(TREND_IDS[i], "—");
-            setNumericRowColor(context, rv, i, R.color.widget_muted);
         }
 
         if (data != null) {
             for (int i=0;i<Math.min(10, data.hospitals.size());i++) {
                 EdData.Hospital h = data.hospitals.get(i);
                 rv.setTextViewText(HOSPITAL_IDS[i], h.shortName);
-                rv.setTextViewText(WAIT_IDS[i], h.triage4Minutes + "m");
+                rv.setTextViewText(WAIT_IDS[i], formatWait(context, h.triage4Minutes, failed));
                 rv.setTextViewText(WAITING_IDS[i], String.valueOf(h.waiting));
                 rv.setTextViewText(TOTAL_IDS[i], String.valueOf(h.total));
                 rv.setTextViewText(TREND_IDS[i], formatTrend(h.totalChange));
-                setNumericRowColor(context, rv, i, failed ? R.color.widget_muted : waitColor(h.triage4Minutes));
             }
             rv.setTextViewText(R.id.updated, (failed ? "Cached • " : "WA Health • ") + data.sourceTimestamp);
             rv.setTextViewText(R.id.status, failed ? "Refresh failed — showing last saved data" : "Trend = total change since prior WA Health update • tap title for source");
@@ -171,11 +173,11 @@ public class EdWidgetProvider extends AppWidgetProvider {
         return R.color.wait_well_over_target;
     }
 
-    private static void setNumericRowColor(Context context, RemoteViews rv, int index, int colorResource) {
-        int color = context.getColor(colorResource);
-        rv.setTextColor(WAIT_IDS[index], color);
-        rv.setTextColor(WAITING_IDS[index], color);
-        rv.setTextColor(TOTAL_IDS[index], color);
-        rv.setTextColor(TREND_IDS[index], color);
+    private static CharSequence formatWait(Context context, int minutes, boolean cached) {
+        SpannableString text = new SpannableString("● " + minutes + "m");
+        int colorResource = cached ? R.color.widget_muted : waitColor(minutes);
+        text.setSpan(new ForegroundColorSpan(context.getColor(colorResource)), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new RelativeSizeSpan(1.65f), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return text;
     }
 }
