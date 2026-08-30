@@ -88,6 +88,12 @@ public class EdWidgetProvider extends AppWidgetProvider {
         Intent source = new Intent(Intent.ACTION_VIEW, Uri.parse(WaHealthClient.URL_STRING));
         PendingIntent sourcePi = PendingIntent.getActivity(context, 1002, source, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         rv.setOnClickPendingIntent(R.id.title, sourcePi);
+
+        Intent info = new Intent(context, MainActivity.class)
+            .putExtra(MainActivity.EXTRA_SHOW_WAIT_INFO, true)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent infoPi = PendingIntent.getActivity(context, 1003, info, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        rv.setOnClickPendingIntent(R.id.info, infoPi);
         return rv;
     }
 
@@ -99,6 +105,7 @@ public class EdWidgetProvider extends AppWidgetProvider {
             rv.setTextViewText(WAITING_IDS[i], "—");
             rv.setTextViewText(TOTAL_IDS[i], "—");
             rv.setTextViewText(TREND_IDS[i], "—");
+            setNumericRowColor(context, rv, i, R.color.widget_muted);
         }
 
         if (data != null) {
@@ -109,6 +116,7 @@ public class EdWidgetProvider extends AppWidgetProvider {
                 rv.setTextViewText(WAITING_IDS[i], String.valueOf(h.waiting));
                 rv.setTextViewText(TOTAL_IDS[i], String.valueOf(h.total));
                 rv.setTextViewText(TREND_IDS[i], formatTrend(h.totalChange));
+                setNumericRowColor(context, rv, i, failed ? R.color.widget_muted : waitColor(h.triage4Minutes));
             }
             rv.setTextViewText(R.id.updated, (failed ? "Cached • " : "WA Health • ") + data.sourceTimestamp);
             rv.setTextViewText(R.id.status, failed ? "Refresh failed — showing last saved data" : "Trend = total change since prior WA Health update • tap title for source");
@@ -154,5 +162,20 @@ public class EdWidgetProvider extends AppWidgetProvider {
         if (change > 0) return "↑ +" + change;
         if (change < 0) return "↓ −" + Math.abs(change);
         return "→ 0";
+    }
+
+    private static int waitColor(int minutes) {
+        if (minutes <= 30) return R.color.wait_within_target;
+        if (minutes <= 60) return R.color.wait_near_target;
+        if (minutes <= 120) return R.color.wait_over_target;
+        return R.color.wait_well_over_target;
+    }
+
+    private static void setNumericRowColor(Context context, RemoteViews rv, int index, int colorResource) {
+        int color = context.getColor(colorResource);
+        rv.setTextColor(WAIT_IDS[index], color);
+        rv.setTextColor(WAITING_IDS[index], color);
+        rv.setTextColor(TOTAL_IDS[index], color);
+        rv.setTextColor(TREND_IDS[index], color);
     }
 }

@@ -4,4 +4,8 @@
     <color name="widget_muted">#5C6B63</color>
     <color name="widget_accent">#006C4C</color>
     <color name="widget_divider">#D9E2DD</color>
+    <color name="wait_within_target">#00733A</color>
+    <color name="wait_near_target">#855800</color>
+    <color name="wait_over_target">#C62828</color>
+    <color name="wait_well_over_target">#760018</color>
 </resources>
