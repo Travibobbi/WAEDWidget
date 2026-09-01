@@ -44,9 +44,27 @@
             android:textStyle="bold" />
 
         <Spinner
-            android:id="@+id/history_hospital"
+            android:id="@+id/history_hospital_1"
             android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            android:layout_height="48dp"
+            android:background="@drawable/history_spinner_green"
+            android:paddingHorizontal="12dp" />
+
+        <Spinner
+            android:id="@+id/history_hospital_2"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/history_spinner_blue"
+            android:paddingHorizontal="12dp" />
+
+        <Spinner
+            android:id="@+id/history_hospital_3"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/history_spinner_orange"
+            android:paddingHorizontal="12dp" />
 
         <RadioGroup
             android:id="@+id/history_period"

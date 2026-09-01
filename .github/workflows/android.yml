@@ -19,18 +19,37 @@ jobs:
           java-version: '17'
           cache: gradle
       - uses: gradle/actions/setup-gradle@v4
-      - name: Build debug APK
-        run: ./gradlew --no-daemon clean assembleDebug
+      - name: Restore release signing key
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          WAED_KEYSTORE_BASE64: ${{ secrets.WAED_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$WAED_KEYSTORE_BASE64" || { echo "WAED_KEYSTORE_BASE64 is not configured"; exit 1; }
+          printf '%s' "$WAED_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/waed-release.jks"
+      - name: Build APK
+        env:
+          WAED_RELEASE_KEYSTORE: ${{ startsWith(github.ref, 'refs/tags/v') && format('{0}/waed-release.jks', runner.temp) || '' }}
+          WAED_RELEASE_STORE_PASSWORD: ${{ secrets.WAED_RELEASE_STORE_PASSWORD }}
+          WAED_RELEASE_KEY_ALIAS: ${{ secrets.WAED_RELEASE_KEY_ALIAS }}
+          WAED_RELEASE_KEY_PASSWORD: ${{ secrets.WAED_RELEASE_KEY_PASSWORD }}
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            ./gradlew --no-daemon clean assembleRelease
+          else
+            ./gradlew --no-daemon clean assembleDebug
+          fi
       - name: Name versioned APK
         if: startsWith(github.ref, 'refs/tags/v')
-        run: cp app/build/outputs/apk/debug/app-debug.apk "app/build/outputs/apk/debug/WAEDWidget-${GITHUB_REF_NAME}-debug.apk"
+        run: cp app/build/outputs/apk/release/app-release.apk "app/build/outputs/apk/release/WAEDWidget-${GITHUB_REF_NAME}.apk"
       - uses: actions/upload-artifact@v4
         with:
-          name: WAEDWidget-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: WAEDWidget
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" "app/build/outputs/apk/debug/WAEDWidget-${GITHUB_REF_NAME}-debug.apk" --title "WA ED Widget ${GITHUB_REF_NAME}" --generate-notes
+        run: gh release create "${GITHUB_REF_NAME}" "app/build/outputs/apk/release/WAEDWidget-${GITHUB_REF_NAME}.apk" --title "WA ED Widget ${GITHUB_REF_NAME}" --generate-notes

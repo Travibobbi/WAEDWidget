@@ -1,6 +1,6 @@
 # WA ED Widget
 
-Current version: **1.3.0**
+Current version: **1.4.0**
 
 Small native Android home-screen widget that reads the public WA Department of Health Emergency Department live activity page.
 
@@ -23,7 +23,7 @@ Small native Android home-screen widget that reads the public WA Department of H
 - Tap `ⓘ` for the ATS 4 target, colour legend, and ACEM reference
 - Last successful response and its trend are cached; if refresh fails, the widget keeps showing cached data and labels it as cached
 - Every distinct WA Health snapshot is retained indefinitely in the app's private SQLite database
-- History requires no account, server, companion app, or storage permission; uninstalling the app or clearing its data removes it
+- History requires no account, server, companion app, or storage permission; in-place updates retain it, and Android backup/device transfer can restore it. Clearing app data still removes it.
 - No accounts, analytics, tracking, advertising, or personal data
 
 ## Source
@@ -36,6 +36,8 @@ With Android SDK 35 and JDK 17 installed, run:
 .\gradlew.bat assembleDebug
 ```
 
-The APK is written to `app/build/outputs/apk/debug/app-debug.apk`. GitHub Actions also builds and uploads the debug APK on every push and pull request.
+The APK is written to `app/build/outputs/apk/debug/app-debug.apk`. GitHub Actions builds a debug APK for ordinary pushes and a consistently signed release APK for version tags.
+
+Tagged releases require the repository secrets `WAED_KEYSTORE_BASE64`, `WAED_RELEASE_STORE_PASSWORD`, `WAED_RELEASE_KEY_ALIAS`, and `WAED_RELEASE_KEY_PASSWORD`. Keep the signing keystore permanently: Android only preserves app data when a newer APK has the same application ID and signing certificate. The tag must also use a higher `versionCode` than the installed build.
 
 This project intentionally uses only Android platform APIs: no third-party runtime dependencies.
