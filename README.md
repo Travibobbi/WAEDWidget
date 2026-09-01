@@ -1,6 +1,6 @@
 # WA ED Widget
 
-Current version: **1.4.0**
+Current version: **1.4.1**
 
 Small native Android home-screen widget that reads the public WA Department of Health Emergency Department live activity page.
 
