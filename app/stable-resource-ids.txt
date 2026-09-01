@@ -6,6 +6,8 @@ com.waed.widget:id/hospital_5 = 0x7f030011
 com.waed.widget:id/waiting_4 = 0x7f03004a
 com.waed.widget:layout/activity_main = 0x7f040001
 com.waed.widget:id/widget_root = 0x7f030050
+com.waed.widget:id/history_export = 0x7f030051
+com.waed.widget:id/preferred_hospital = 0x7f030052
 com.waed.widget:id/history_7_days = 0x7f030004
 com.waed.widget:id/waiting_9 = 0x7f03004f
 com.waed.widget:id/waiting_3 = 0x7f030049
@@ -101,4 +103,3 @@ com.waed.widget:id/indicator_10 = 0x7f030017
 com.waed.widget:string/widget_description = 0x7f050001
 com.waed.widget:layout/widget_ed = 0x7f040002
 com.waed.widget:color/wait_over_target = 0x7f010001
-

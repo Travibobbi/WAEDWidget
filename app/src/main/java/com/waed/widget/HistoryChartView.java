@@ -110,7 +110,7 @@ public class HistoryChartView extends View {
                 if (i == 0) path.moveTo(x, y); else path.lineTo(x, y);
             }
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(2.5f * density);
+            paint.setStrokeWidth(1.25f * density);
             paint.setStrokeJoin(Paint.Join.ROUND);
             paint.setStrokeCap(Paint.Cap.ROUND);
             paint.setColor(item.color);
@@ -121,7 +121,7 @@ public class HistoryChartView extends View {
                 float fraction = Math.max(0f, Math.min(1f, (point.recordedAt - startTime) / (float) (endTime - startTime)));
                 float x = left + (right - left) * fraction;
                 float y = bottom - (bottom - top) * point.triage4Minutes / axisMaximum;
-                canvas.drawCircle(x, y, 2.5f * density, paint);
+                canvas.drawCircle(x, y, 1.25f * density, paint);
             }
         }
 

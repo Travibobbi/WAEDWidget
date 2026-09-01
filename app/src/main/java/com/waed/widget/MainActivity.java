@@ -5,15 +5,24 @@ import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends Activity {
     static final String SOURCE_URL = "https://www.health.wa.gov.au/Reports-and-publications/Emergency-Department-activity/Data?report=ed_activity_now";
     static final String ACEM_TRIAGE_URL = "https://acem.org.au/Content-Sources/Advancing-Emergency-Medicine/Better-Outcomes-for-Patients/Triage";
     static final String EXTRA_SHOW_WAIT_INFO = "show_wait_info";
+    static final String USER_PREFS = "user_settings";
+    static final String PREF_PREFERRED_HOSPITAL = "preferred_hospital";
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +39,8 @@ public class MainActivity extends Activity {
             }
         });
 
+        setupPreferredHospital();
+
         findViewById(R.id.open_source).setOnClickListener(v ->
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(SOURCE_URL))));
 
@@ -40,6 +51,52 @@ public class MainActivity extends Activity {
         if (getIntent().getBooleanExtra(EXTRA_SHOW_WAIT_INFO, false)) {
             showWaitColourInfo();
         }
+    }
+
+    private void setupPreferredHospital() {
+        Spinner spinner = findViewById(R.id.preferred_hospital);
+        List<EdHistoryStore.HospitalOption> hospitals;
+        try (EdHistoryStore store = new EdHistoryStore(this)) {
+            hospitals = store.loadHospitals();
+        }
+
+        if (hospitals.isEmpty()) {
+            ArrayAdapter<String> emptyAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                new String[]{"No recorded hospitals yet"});
+            spinner.setAdapter(emptyAdapter);
+            spinner.setEnabled(false);
+            return;
+        }
+
+        ArrayAdapter<EdHistoryStore.HospitalOption> adapter = new ArrayAdapter<>(this,
+            android.R.layout.simple_spinner_item, hospitals);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        SharedPreferences preferences = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+        String preferred = preferences.getString(PREF_PREFERRED_HOSPITAL, null);
+        int preferredPosition = 0;
+        for (int i = 0; i < hospitals.size(); i++) {
+            if (hospitals.get(i).fullName.equals(preferred)) {
+                preferredPosition = i;
+                break;
+            }
+        }
+        spinner.setSelection(preferredPosition, false);
+        if (preferred == null) {
+            preferences.edit().putString(PREF_PREFERRED_HOSPITAL,
+                hospitals.get(preferredPosition).fullName).apply();
+        }
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                preferences.edit().putString(PREF_PREFERRED_HOSPITAL,
+                    hospitals.get(position).fullName).apply();
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
     }
 
     private void showWaitColourInfo() {

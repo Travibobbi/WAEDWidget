@@ -6,9 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /** App-private, append-only history of distinct WA Health snapshots. */
@@ -90,6 +95,37 @@ final class EdHistoryStore extends SQLiteOpenHelper {
             }
         }
         return points;
+    }
+
+    void writeCsv(Writer writer) throws IOException {
+        writer.write("recorded_at,source_timestamp,hospital_name,short_name,triage4_minutes,waiting,total,total_change\n");
+        String sql = "SELECT s.recorded_at, s.source_timestamp, r.hospital_name, r.short_name, "
+            + "r.triage4_minutes, r.waiting, r.total, r.total_change FROM snapshots s "
+            + "JOIN readings r ON r.snapshot_id = s.id ORDER BY s.recorded_at, r.hospital_name";
+        SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US);
+        try (Cursor cursor = getReadableDatabase().rawQuery(sql, null)) {
+            while (cursor.moveToNext()) {
+                writeCsvField(writer, timestampFormat.format(new Date(cursor.getLong(0))));
+                writer.write(',');
+                writeCsvField(writer, cursor.getString(1));
+                writer.write(',');
+                writeCsvField(writer, cursor.getString(2));
+                writer.write(',');
+                writeCsvField(writer, cursor.getString(3));
+                writer.write(',' + String.valueOf(cursor.getInt(4)));
+                writer.write(',' + String.valueOf(cursor.getInt(5)));
+                writer.write(',' + String.valueOf(cursor.getInt(6)));
+                writer.write(',');
+                if (!cursor.isNull(7)) writer.write(String.valueOf(cursor.getInt(7)));
+                writer.write('\n');
+            }
+        }
+    }
+
+    private static void writeCsvField(Writer writer, String value) throws IOException {
+        writer.write('"');
+        writer.write(value == null ? "" : value.replace("\"", "\"\""));
+        writer.write('"');
     }
 
     void seedIfEmpty(EdData cached) {
