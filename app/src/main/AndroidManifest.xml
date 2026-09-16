@@ -23,6 +23,8 @@
             android:name=".HistoryActivity"
             android:exported="false" />
 
+        <activity android:name=".AnalysisActivity" android:exported="false" />
+
         <receiver
             android:name=".EdWidgetProvider"
             android:exported="true">

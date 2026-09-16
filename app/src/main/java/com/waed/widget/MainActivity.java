@@ -47,6 +47,8 @@ public class MainActivity extends Activity {
         findViewById(R.id.wait_colour_info).setOnClickListener(v -> showWaitColourInfo());
         findViewById(R.id.open_history).setOnClickListener(v ->
             startActivity(new Intent(this, HistoryActivity.class)));
+        findViewById(R.id.open_analysis).setOnClickListener(v ->
+            startActivity(new Intent(this, AnalysisActivity.class)));
 
         if (getIntent().getBooleanExtra(EXTRA_SHOW_WAIT_INFO, false)) {
             showWaitColourInfo();

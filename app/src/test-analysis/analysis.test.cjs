@@ -1,0 +1,7 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const a=require('../main/assets/analysis/analysis.js');
+test('snapshot quantiles ignore missing values without treating them as zero',()=>{assert.equal(a.quantile([null,10,20,30],.5),20);assert.equal(a.quantile([], .9),null)});
+test('revisions replace only the same measure, period and priority',()=>{const base={source_id:'sjwa-response',establishment_id:'service',metric_id:'response',period_type:'month',reporting_date:'2026-08-31',period_start:'2026-08-01',ambulance_priority:1,captured_at_utc:'2026-09-15T00:00:00Z',value:.8};let rows=a.latest([base,{...base,captured_at_utc:'2026-09-16T00:00:00Z',value:.9},{...base,ambulance_priority:2,value:.7}]);assert.equal(rows.length,2);assert.equal(rows.find(r=>r.ambulance_priority===1).value,.9)});
+test('Perth dates and gaps use source times, excluding unparseable times',()=>{const t=Date.parse('2026-09-15T15:30:00Z');const s=a.stats([{source_time:t,wait:10},{source_time:t+7200000,wait:30},{source_time:0,wait:99}]);assert.equal(s.days,2);assert.equal(s.gaps,1);assert.equal(s.unparsed,1);assert.equal(s.median,20)});
+test('included archives have unique observation keys and all three sources',()=>{let rows=require('../main/assets/analysis/archive.json').observations;assert.equal(a.latest(rows).length,rows.length);assert.equal(new Set(rows.map(o=>o.source_id)).size,3);assert(rows.length>7000)});

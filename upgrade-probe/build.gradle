@@ -1,0 +1,18 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.waed.upgradeprobe'
+    compileSdk 35
+    defaultConfig { applicationId 'com.waed.upgradeprobe'; minSdk 26; targetSdk 35; versionCode 1; versionName '1' }
+    signingConfigs {
+        if (System.getenv('WAED_RELEASE_KEYSTORE')) {
+            release {
+                storeFile file(System.getenv('WAED_RELEASE_KEYSTORE'))
+                storePassword System.getenv('WAED_RELEASE_STORE_PASSWORD')
+                keyAlias System.getenv('WAED_RELEASE_KEY_ALIAS')
+                keyPassword System.getenv('WAED_RELEASE_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes { release { if(signingConfigs.findByName('release')!=null) signingConfig signingConfigs.release } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}

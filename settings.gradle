@@ -7,3 +7,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "WAEDWidget"
 include ':app'
+if (System.getenv('WAED_UPGRADE_PROBE') == '1') include ':upgrade-probe'

@@ -5,3 +5,7 @@
 **/build/
 local.properties
 *.iml
+/.upgrade-reference/
+/collector/
+/research/
+/deliverables/
