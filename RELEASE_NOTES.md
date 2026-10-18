@@ -1,15 +1,8 @@
-# New in 2.0.3
+# New in 2.0.4
 
-- Fixes analysis being stuck on the September snapshot. WA ED, ambulance response and ramping reports now download automatically.
-- The public-report collector checks daily at approximately 12:17 pm and 6:17 pm Perth time. Android checks in the background about every 12 hours and when Analysis opens; Refresh checks immediately. Internet access, Android battery restrictions and GitHub scheduling can delay updates.
-- Analysis shows the report date for each source and the last successful check. Failed downloads keep the last good data and display an error; overdue feeds are labelled.
-- Includes reports through 17 October 2026 for offline use. Source publication dates may lag today.
-- Full public capture evidence and each published feed version are retained in portable JSON archives on the repository's data-feed branch. Private Drive archives and personal widget readings are not published.
+- Highlights now show the latest available month, including month-to-date data, instead of remaining on the last completed month.
+- Analysis checks for new reports when you return to it and while it stays open. All tabs redraw from the same updated data, keeping your selected page. Daily background collection continues.
+- Current-month comparisons display MONTH IN PROGRESS and the source reporting date. Ramping shows reported days out of the full month and labels arrows Trending improved/worsened.
+- After seven reported days, ramping shows a clearly labelled month-end estimate: hours so far divided by reported days, multiplied by days in the month. It compares with the same month last year. This assumes the daily rate continues; it is not a final result or a statistical forecast.
 
-## Install as an update
-
-Install **WAEDWidget-v2.0.3.apk** over WA ED Widget 1.5 or 2.0.2. Do not uninstall or clear storage. This uses the same production application identity and signing certificate. The widget database, retained log, preferences and manual imports are preserved.
-
-Release checks install the actual 1.5 APK, seed history, upgrade in place, download the live report feed, reject a corrupt update, and verify the original history and full-history backup remain intact.
-
-The public feed captures current source reports going forward. Older private Drive captures remain available through Import; this update does not automatically download private Drive files.
+Install WAEDWidget-v2.0.4.apk over your existing WA ED Widget. Do not uninstall or clear storage. Production signing, application identity and widget history storage are unchanged; release checks verify the actual 1.5 in-place upgrade, history preservation and live report download.

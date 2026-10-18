@@ -26,3 +26,14 @@ test('T4 uses Perth source dates, deduplicates repeated exports and preserves mi
 test('every hospital renders both pages with no widget history',()=>{
  for(let i=0;i<h.hospitals.length;i++){assert.match(h.render('ramping',i,archive,[]),/<svg/);assert.match(h.render('t4',i,archive,[]),/No captured T4 readings/);}
 });
+
+test('month-end estimate uses elapsed days, stays provisional and suppresses very early estimates',()=>{
+ const m=h.rampModel(archive,'royal-perth');assert(Math.abs(m.projection-824.71/17*31)<1e-8);
+ assert.match(h.render('ramping',8,archive,[]),/MONTH IN PROGRESS/);
+ assert.match(h.render('ramping',8,archive,[]),/17 of 31 days reported/);
+ const early=archive.map(o=>o.source_id==='sjwa-ramping'?{...o,as_of_date:'2026-10-03'}:o);
+ assert.equal(h.rampModel(early,'royal-perth').projection,null);
+ const completed=archive.map(o=>o.source_id==='sjwa-ramping'?{...o,as_of_date:'2026-10-31',period_complete:true}:o);
+ assert.equal(h.rampModel(completed,'royal-perth').projection,null);
+ assert.doesNotMatch(h.render('ramping',8,completed,[]),/MONTH IN PROGRESS/);
+});

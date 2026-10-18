@@ -1,14 +1,14 @@
 # WA ED Widget
 
-Current version: **2.0.3** (version code 12).
+Current version: **2.0.4** (version code 13).
 
-The GitHub release APK is the production-signed update for version 1.5. Install it in place without uninstalling or clearing storage. Existing history is read directly; CSV import is not needed for an upgrade. Export the current History CSV to Drive first as an extra copy. Release publication is gated on certificate matching and an actual 1.5-to-2.0.3 emulator upgrade test covering old/recent readings, nulls, timestamps, preferences, the full-history backup and isolation of CSV imports.
+The GitHub release APK is the production-signed update for version 1.5. Install it in place without uninstalling or clearing storage. Existing history is read directly; CSV import is not needed for an upgrade. Export the current History CSV to Drive first as an extra copy. Release publication is gated on certificate matching and an actual 1.5-to-2.0.4 emulator upgrade test covering old/recent readings, nulls, timestamps, preferences, the full-history backup and isolation of CSV imports.
 
 **Ramping** and **T4 Wait** provide a page for each of the ten metro hospitals, with Previous/Next controls. Ramping compares the source's current calendar month with the same month in the prior three years using hours per calendar day; current month-to-date rates are explicitly provisional against complete historical months. Red up / green down compares with the previous year's rate. Missing comparisons have no directional arrow. Totals and denominators remain available in details.
 
 T4 Wait overlays the published daily ED median with the daily median of sampled widget T4 average readings, using Perth source dates. It shows gaps and sample counts and does not imply that these are the same statistic. Use **Import** to select a CSV from version 1.5's **History → Export CSV**. The original CSV is saved separately by content hash; it never updates either app's database. Repeated readings are deduplicated by hospital and source timestamp, with native readings taking precedence. Imported readings from the past 90 days enter the analysis; the complete CSV stays retained. Archive observations.json imports are still supported.
 
-The analysis screen now opens to one highlighted trend at a time, with Previous/Next navigation, a historical chart and a shortcut into the archive explorer. Monthly highlights use the latest complete month. Notes, exact values and coverage information are collapsed by default. T4 highlights show daily medians of collected readings for each hospital with local history. The archive explorer remains available as a separate tab.
+The analysis screen now opens to one highlighted trend at a time, with Previous/Next navigation, a historical chart and a shortcut into the archive explorer. Monthly highlights use the latest available month and prominently identify incomplete months. Ramping estimates the month-end total at the current daily rate after seven reported days. Notes, exact values and coverage information are collapsed by default. T4 highlights show daily medians of collected readings for each hospital with local history. The archive explorer remains available as a separate tab.
 
 Debug builds install separately as **WA ED Preview** (`com.waed.widget.preview`), allowing testing alongside the existing app. They have independent history and cannot access version 1.5's private database. Release builds retain the original application ID for a future correctly signed in-place upgrade.
 

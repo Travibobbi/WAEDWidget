@@ -69,8 +69,12 @@ function render(){
   stats[1].remove();stats[2].remove();grid.className='hero';
   const selectedRows=observations.filter(o=>JSON.stringify([o.source_id,o.establishment_id,o.metric_id,o.period_type||'day',o.ambulance_priority??null,o.comparison??null])===series).sort((a,b)=>(a.period_start||a.reporting_date).localeCompare(b.period_start||b.reporting_date));
   const complete=selectedRows.filter(o=>o.period_type==='month'&&o.period_complete===true&&Number.isFinite(o.value));
-  const last=mode==='highlights'&&complete.length?complete[complete.length-1]:selectedRows[selectedRows.length-1];
+  const last=selectedRows[selectedRows.length-1];
   if(last){
+   if(last.period_type==='month'&&last.period_complete===false){const note=document.createElement('p');note.className='notice';note.innerHTML='<strong>MONTH IN PROGRESS</strong> · through '+esc(last.as_of_date||last.reporting_date)+'<br>This is a partial month, not a final result. The last chart point is the partial value.';grid.before(note);
+    for(const oldComparison of active.querySelectorAll('p.notice'))if(oldComparison!==note&&oldComparison.textContent.startsWith('Same month, one year apart:'))oldComparison.remove();
+    if(last.metric_id==='ramped_hours'){const m=root.HospitalPages.rampModel(observations,last.establishment_id);if(m.projection!==null&&m.projection!==undefined)note.innerHTML+='<br><strong>'+esc(fmt(m.projection,'hours'))+' estimated at month end</strong> if the current daily rate continues. '+(m.percent===null?'':esc(fmt(Math.abs(m.percent),'%'))+' '+(m.direction==='up'?'higher':'lower')+' daily rate than the same month last year.');}
+   }
    const displayUnit=last.unit==='fraction'?'%':last.unit,displayValue=last.unit==='fraction'&&last.value!==null?last.value*100:last.value;
    stats[0].innerHTML='<strong>'+esc(fmt(displayValue,displayUnit))+'</strong>'+esc((last.period_start||last.reporting_date).slice(0,last.period_type==='month'?7:10)+(last.period_type==='month'?' · monthly':'')+(last.period_complete===false?' · incomplete / source-defined':''));meta.textContent+=' · '+displayUnit;
    const nice={ramped_hours:'Ambulance ramping',response_cases:'Ambulance cases',response_within_target_fraction:'Responses within target',triage_4_median_wait_minutes:'Triage 4 median wait',ed_attendances:'ED attendances'};
@@ -80,7 +84,7 @@ function render(){
   }
   const svg=active.querySelector('svg');if(svg)svg.insertAdjacentElement('afterend',meta);else active.append(meta);
   active.querySelectorAll('p.muted,.scroll').forEach(e=>details.append(e));
-  const comparison=active.querySelector('.notice');if(comparison){comparison.className='comparison';comparison.textContent=comparison.textContent.replace('Same month, one year apart: ','').replace(' Only complete monthly buckets are compared; figures can still be revised.','');}
+  const comparison=active.querySelector('.notice');if(comparison&&comparison.textContent.startsWith('Same month, one year apart:')){comparison.className='comparison';comparison.textContent=comparison.textContent.replace('Same month, one year apart: ','').replace(' Only complete monthly buckets are compared; figures can still be revised.','');}
   if(mode==='highlights')active.querySelectorAll('label,select').forEach(e=>e.remove());
  }else{
   active.querySelector('h2').textContent='T4 wait patterns';
