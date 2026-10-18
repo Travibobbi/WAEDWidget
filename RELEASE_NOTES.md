@@ -1,17 +1,15 @@
-# New in 2.0.2
+# New in 2.0.3
 
-- Highlights: one historical trend at a time, with Previous/Next navigation.
-- Archive explorer: browse saved WA ED and SJWA data by hospital and measure.
-- Ramping: ten metro hospital pages comparing the same month across four years, with provisional red/green direction indicators. Bars use hours per day to account for the incomplete current month.
-- T4 Wait: published daily median waits overlaid with daily medians of your captured widget readings. The different measures are labelled explicitly.
-- JSON archive and widget-history CSV imports, standalone report export, and a portable full-history safety backup created when analysis is first opened.
+- Fixes analysis being stuck on the September snapshot. WA ED, ambulance response and ramping reports now download automatically.
+- The public-report collector checks daily at approximately 12:17 pm and 6:17 pm Perth time. Android checks in the background about every 12 hours and when Analysis opens; Refresh checks immediately. Internet access, Android battery restrictions and GitHub scheduling can delay updates.
+- Analysis shows the report date for each source and the last successful check. Failed downloads keep the last good data and display an error; overdue feeds are labelled.
+- Includes reports through 17 October 2026 for offline use. Source publication dates may lag today.
+- Full public capture evidence and each published feed version are retained in portable JSON archives on the repository's data-feed branch. Private Drive archives and personal widget readings are not published.
 
-## Updating from 1.5
+## Install as an update
 
-Download **WAEDWidget-v2.0.2.apk** below and install it over the existing **WA ED Widget**. Do **not** uninstall version 1.5 or clear its storage. Export History → Export CSV to Drive first as an extra copy.
+Install **WAEDWidget-v2.0.3.apk** over WA ED Widget 1.5 or 2.0.2. Do not uninstall or clear storage. This uses the same production application identity and signing certificate. The widget database, retained log, preferences and manual imports are preserved.
 
-This is the production-signed update, not the separate Preview app. It keeps `com.waed.widget`, the existing signing certificate, database name and schema, widget resources and preferences. Your existing history is read directly; you do not need to import it. The widget retains its current appearance.
+Release checks install the actual 1.5 APK, seed history, upgrade in place, download the live report feed, reject a corrupt update, and verify the original history and full-history backup remain intact.
 
-Publication is gated on a disposable-emulator test that installs the actual 1.5 APK, seeds old and recent history, installs this release with `adb install -r`, and verifies all readings, nulls, timestamps, preferences, safety-backup contents and isolation of CSV imports.
-
-Saved archive data is bundled from 16 September 2026; use Import for newer collector observations.json files. Private Google Drive archives are not automatically synced by this app.
+The public feed captures current source reports going forward. Older private Drive captures remain available through Import; this update does not automatically download private Drive files.

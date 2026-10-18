@@ -86,9 +86,14 @@ final class AnalysisRepository {
         JSONObject base=new JSONObject(read(context.getAssets().open("analysis/archive.json")));
         JSONArray batches=new JSONArray().put(base); File dir=new File(context.getFilesDir(),"analysis-imports");
         File[] files=dir.listFiles((d,n)->n.endsWith(".json")); if(files!=null){Arrays.sort(files);for(File f:files)batches.put(new JSONObject(read(new FileInputStream(f))));}
+        JSONObject cached=ArchiveSync.cached(context);if(cached!=null)batches.put(cached);
         return new JSONObject().put("batches",batches).put("imported_files",files==null?0:files.length);
     }
     static void importArchive(Context context, String text) throws Exception {
+        validateArchive(text);
+        saveArchive(context,text);
+    }
+    static JSONObject validateArchive(String text) throws Exception {
         JSONObject data=new JSONObject(text); JSONArray rows=data.getJSONArray("observations");
         if(data.optInt("schema_version")!=1||rows.length()==0||rows.length()>100000)throw new IOException("Not a supported observations.json capture.");
         for(int i=0;i<rows.length();i++) {
@@ -101,6 +106,9 @@ final class AnalysisRepository {
             for(String k:new String[]{"period_start","period_end","as_of_date"})if(o.has(k)&&!o.isNull(k))java.time.LocalDate.parse(o.getString(k));
             if(source.startsWith("sjwa-")&&!o.has("period_type"))throw new IOException("Missing reporting period.");
         }
+        return data;
+    }
+    private static void saveArchive(Context context,String text) throws Exception {
         File dir=new File(context.getFilesDir(),"analysis-imports");if(!dir.exists()&&!dir.mkdirs())throw new IOException("Cannot create import folder.");
         byte[] bytes=text.getBytes(StandardCharsets.UTF_8);StringBuilder hash=new StringBuilder();for(byte b:MessageDigest.getInstance("SHA-256").digest(bytes))hash.append(String.format(Locale.US,"%02x",b&255));
         File dest=new File(dir,hash+".json");if(dest.exists())return;

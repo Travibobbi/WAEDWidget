@@ -68,7 +68,16 @@ public class UpgradeProbe extends Instrumentation {
                     +"2026-09-16T10:00:00+08:00,\"Wednesday, 16 September 2026 10:00 AM\",Royal Perth Hospital,RPH,32,4,20,\n";
                 importer.invoke(null,c,csv);importer.invoke(null,c,csv);
                 require(new File(c.getFilesDir(),"widget-csv-imports").listFiles().length==1,"Duplicate CSV import created multiple files");
-                require(before.equals(snapshot(c)),"Opening analysis or importing CSV changed retained history");
+                Class<?> sync=Class.forName("com.waed.widget.ArchiveSync",true,c.getClassLoader());
+                java.lang.reflect.Method refresh=sync.getDeclaredMethod("refresh",Context.class,boolean.class);refresh.setAccessible(true);refresh.invoke(null,c,true);
+                require(!c.getSharedPreferences("report-sync",0).contains("error"),"Public report sync failed: "+c.getSharedPreferences("report-sync",0).getString("error",""));
+                File cache=new File(c.getFilesDir(),"report-feed.json");require(cache.exists(),"Report feed was not downloaded");
+                byte[] cached=java.nio.file.Files.readAllBytes(cache.toPath());JSONObject feed=new JSONObject(new String(cached,StandardCharsets.UTF_8));
+                require(feed.getJSONObject("source_dates").length()==3,"Missing report sources");
+                java.lang.reflect.Method install=sync.getDeclaredMethod("install",Context.class,JSONObject.class,byte[].class);install.setAccessible(true);
+                boolean rejected=false;try{install.invoke(null,c,new JSONObject().put("sha256","invalid").put("bytes",cached.length),cached);}catch(java.lang.reflect.InvocationTargetException expected){rejected=true;}
+                require(rejected,"Corrupt report was accepted");require(java.util.Arrays.equals(cached,java.nio.file.Files.readAllBytes(cache.toPath())),"Failed update damaged saved reports");
+                require(before.equals(snapshot(c)),"Opening analysis, report sync or importing CSV changed retained history");
                 output.putString("result","UPGRADE_DATA_OK: original rows, nulls, timestamps, preferences and full-history backup preserved; CSV imports isolated");
             }
             finish(-1,output);

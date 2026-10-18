@@ -1,0 +1,40 @@
+name: Daily public report feed
+on:
+  schedule:
+    - cron: '17 4,10 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/feed/**', '.github/workflows/daily-data.yml']
+permissions:
+  contents: write
+concurrency:
+  group: daily-report-feed
+  cancel-in-progress: false
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: data-feed
+          path: feed-output
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Capture, validate and preserve public report evidence
+        id: capture
+        run: node scripts/feed/publish.cjs feed-output
+      - name: Preserve captures and publish validated feed
+        if: always()
+        working-directory: feed-output
+        run: |
+          git config user.name 'WA ED report collector'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add captures snapshots latest.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Capture public WA ED and SJWA reports'
+            git push origin HEAD:data-feed
+          fi
