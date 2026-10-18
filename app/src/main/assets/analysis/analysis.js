@@ -8,8 +8,8 @@ function latest(rows){const m=new Map();for(const o of rows){const k=key(o),p=m.
 function stats(rows){const valid=rows.filter(r=>Number.isFinite(r.source_time)&&r.source_time>0&&Number.isFinite(r.wait));let times=[...new Set(valid.map(r=>r.source_time))].sort((a,b)=>a-b);let gaps=0;for(let i=1;i<times.length;i++)if(times[i]-times[i-1]>90*60000)gaps++;return {valid,unparsed:rows.length-valid.length,days:new Set(times.map(t=>new Date(t+8*3600000).toISOString().slice(0,10))).size,gaps,median:quantile(valid.map(r=>r.wait),.5),p90:quantile(valid.map(r=>r.wait),.9)}}
 const api={quantile,latest,stats,key};if(typeof module!=='undefined')module.exports=api;if(!root.document)return;
 let data,observations,hospital='',series='',source='sjwa-ramping',entity='royal-perth',mode='highlights',slideIndex=0;
-const hospitalIndexes={ramping:0,t4:0};
-function bindTabs(){for(const id of ['highlights','explorer','ramping','t4']){const b=document.getElementById(id);b.classList.toggle('active',mode===id);b.setAttribute('aria-pressed',String(mode===id));b.onclick=()=>{mode=id;render()}}}
+const hospitalIndexes={ramping:0,t4:0,roster:0};let rosterType='Day';
+function bindTabs(){for(const id of ['highlights','explorer','ramping','t4','roster']){const b=document.getElementById(id);b.classList.toggle('active',mode===id);b.setAttribute('aria-pressed',String(mode===id));b.onclick=()=>{mode=id;render()}}}
 const card=(title,body)=>'<section class="card"><h2>'+title+'</h2>'+body+'</section>';
 const stat=(value,label)=>'<div class="stat"><strong>'+esc(value)+'</strong>'+esc(label)+'</div>';
 function renderLegacy(){const w=data.widget||{rows:[],snapshots:0},rows=w.rows||[],hospitals=[...new Set(rows.map(r=>r.hospital))].sort();if(!hospitals.includes(hospital))hospital=hospitals[0]||'';const selected=rows.filter(r=>r.hospital===hospital),s=stats(selected);
@@ -43,6 +43,14 @@ function slideChoices(){
  return choices;
 }
 function render(){
+ if(mode==='roster'){
+  document.getElementById('content').innerHTML=root.Roster.render(hospitalIndexes.roster,rosterType,data.widget.rows||[],root.HospitalPages.hospitals);
+  document.getElementById('roster-prev').onclick=()=>{hospitalIndexes.roster=Math.max(0,hospitalIndexes.roster-1);render()};
+  document.getElementById('roster-next').onclick=()=>{hospitalIndexes.roster=Math.min(root.HospitalPages.hospitals.length-1,hospitalIndexes.roster+1);render()};
+  for(const type of ['Day','Night'])document.getElementById('roster-'+type.toLowerCase()).onclick=()=>{rosterType=type;render()};
+  bindTabs();return;
+ }
+
  if(mode==='ramping'||mode==='t4'){
   document.getElementById('content').innerHTML=root.HospitalPages.render(mode,hospitalIndexes[mode],observations,data.widget.rows||[],data.widget.is_preview!==false);
   document.getElementById('hospital-prev').onclick=()=>{hospitalIndexes[mode]=Math.max(0,hospitalIndexes[mode]-1);render()};

@@ -1,8 +1,8 @@
 # WA ED Widget
 
-Current version: **2.0.4** (version code 13).
+Current version: **2.0.5** (version code 14).
 
-The GitHub release APK is the production-signed update for version 1.5. Install it in place without uninstalling or clearing storage. Existing history is read directly; CSV import is not needed for an upgrade. Export the current History CSV to Drive first as an extra copy. Release publication is gated on certificate matching and an actual 1.5-to-2.0.4 emulator upgrade test covering old/recent readings, nulls, timestamps, preferences, the full-history backup and isolation of CSV imports.
+The GitHub release APK is the production-signed update for version 1.5. Install it in place without uninstalling or clearing storage. Existing history is read directly; CSV import is not needed for an upgrade. Export the current History CSV to Drive first as an extra copy. Release publication is gated on certificate matching and an actual 1.5-to-2.0.5 emulator upgrade test covering old/recent readings, nulls, timestamps, preferences, the full-history backup and isolation of CSV imports.
 
 **Ramping** and **T4 Wait** provide a page for each of the ten metro hospitals, with Previous/Next controls. Ramping compares the source's current calendar month with the same month in the prior three years using hours per calendar day; current month-to-date rates are explicitly provisional against complete historical months. Red up / green down compares with the previous year's rate. Missing comparisons have no directional arrow. Totals and denominators remain available in details.
 
@@ -80,3 +80,7 @@ The `Daily public report feed` GitHub workflow captures public WA ED and SJWA re
 Android downloads on Analysis open (hourly check limit), every 12 hours when permitted by Android, and immediately with Refresh. Downloads validate checksum, schema and reporting dates before atomically replacing the separate cache. Failures retain saved data. Widget history and manual imports are never written by sync. Daily mobile rows cover 90 days; monthly history and full server capture evidence remain retained.
 
 Source reports can lag today. The app shows individual source dates, last successful check and stale/error state. Private Drive archives continue independently and can be imported for earlier daily coverage.
+
+## Roster comparisons
+
+Roster colours use the user-confirmed continuous eight-day cycle anchored to 18 September 2026: two days each of Black/Blue, Green/Black, Red/Green and Blue/Red (day/night). Day is 07:00–18:00 Perth; night is 18:00–07:00, assigned to its starting date. Comparisons use local source timestamps and the median of per-shift T4 reading medians, with equal weight per observed shift. Coverage is displayed; seven observed shifts per colour is a caution threshold, not a significance test. Daily/monthly archive values are not assigned to shifts. The roster module and tests keep these rules explicit for later revision.

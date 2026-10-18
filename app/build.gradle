@@ -10,8 +10,8 @@ android {
         applicationId 'com.waed.widget'
         minSdk 26
         targetSdk 35
-        versionCode 13
-        versionName '2.0.4'
+        versionCode 14
+        versionName '2.0.5'
     }
 
     def releaseKeystore = System.getenv('WAED_RELEASE_KEYSTORE')
