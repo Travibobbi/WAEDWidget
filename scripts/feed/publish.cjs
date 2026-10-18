@@ -26,7 +26,8 @@ function publish(root,captures,now=new Date().toISOString()){
  const latestPath=path.join(root,'latest.json');const prior=fs.existsSync(latestPath)?JSON.parse(fs.readFileSync(latestPath)):null;
  if(prior)for(const k of Object.keys(sources))if(sources[k]<prior.source_dates[k])throw Error('Source reporting date regressed');
  const previous=prior?JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(root,prior.path)))).observations:[];
- const observations=merge(previous,captures.flatMap(c=>c.observations),now);
+ const recovered=JSON.parse(fs.readFileSync(path.join(__dirname,'response-history.json'),'utf8')).observations;
+ const observations=merge(previous,[...recovered,...captures.flatMap(c=>c.observations)],now);
  const data=Buffer.from(JSON.stringify({schema_version:1,generated_at_utc:now,source_dates:sources,observations}));if(data.length>24*1024*1024)throw Error('Feed exceeds mobile size budget');
  const compressed=zlib.gzipSync(data,{level:9}),snapshot='snapshots/'+id+'.json.gz';writeNew(root,snapshot,compressed);
  const pointer={schema_version:1,generated_at_utc:now,source_dates:sources,path:snapshot,sha256:hash(data),bytes:data.length,observations:observations.length,evidence_path:evidencePath,evidence_sha256:hash(evidence)};

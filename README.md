@@ -1,8 +1,8 @@
 # WA ED Widget
 
-Current version: **2.1.0** (version code 15).
+Current version: **2.1.1** (version code 16).
 
-The GitHub release APK is the production-signed update for version 1.5. Install it in place without uninstalling or clearing storage. Existing history is read directly; CSV import is not needed for an upgrade. Export the current History CSV to Drive first as an extra copy. Release publication is gated on certificate matching and an actual 1.5-to-2.1.0 emulator upgrade test covering old/recent readings, nulls, timestamps, preferences, the full-history backup and isolation of CSV imports.
+The GitHub release APK is the production-signed update for version 1.5. Install it in place without uninstalling or clearing storage. Existing history is read directly; CSV import is not needed for an upgrade. Export the current History CSV to Drive first as an extra copy. Release publication is gated on certificate matching and an actual 1.5-to-2.1.1 emulator upgrade test covering old/recent readings, nulls, timestamps, preferences, the full-history backup and isolation of CSV imports.
 
 **Ramping** and **T4 Wait** provide a page for each of the ten metro hospitals, with Previous/Next controls. Ramping compares the source's current calendar month with the same month in the prior three years using hours per calendar day; current month-to-date rates are explicitly provisional against complete historical months. Red up / green down compares with the previous year's rate. Missing comparisons have no directional arrow. Totals and denominators remain available in details.
 
@@ -88,3 +88,9 @@ Roster colours use the user-confirmed continuous eight-day cycle anchored to 18 
 ## App-first navigation
 
 The launcher opens Highlights. Four bottom navigation pages are Highlights, Ramping, T4 Wait and Roster. More retains Archive explorer, widget settings, saved history/CSV, imports, backup and report export. The app is labelled WA ED Insights; its production package, certificate and widget remain compatible. Highlights recompute daily response changes and rank same-month ramping rate differences from available public reports. Ramping also compares the previous three consecutive months using hours per day; T4 has hourly horizontal guides while retaining minutes as its data unit.
+
+## Recovered response history and detailed comparisons
+
+The user authorized publishing recovered public SJWA daily response figures. `scripts/feed/response-history.json` retains 33 continuous reporting dates (15 September–17 October 2026), with three priorities and target/within-target percentages. They were decoded from previously saved source responses, not estimated from monthly data. Only normalized public figures and provenance timestamps/hashes are included; private Drive links, raw private files and widget logs are excluded. Feed publication merges this backfill with new captures.
+
+Ramping has one incomplete-month badge, explicit hours/day axes and a recent-month arrow against the days-weighted rate of the preceding three complete months. T4 uses a tall horizontally scrollable daily chart with fixed hourly labels. Roster adds weekday/weekend T4 shift comparisons and whole-day response performance by weekday and priority; daily response cannot be attributed to individual shifts.
