@@ -1,8 +1,8 @@
 # WA ED Widget
 
-Current version: **2.0.5** (version code 14).
+Current version: **2.1.0** (version code 15).
 
-The GitHub release APK is the production-signed update for version 1.5. Install it in place without uninstalling or clearing storage. Existing history is read directly; CSV import is not needed for an upgrade. Export the current History CSV to Drive first as an extra copy. Release publication is gated on certificate matching and an actual 1.5-to-2.0.5 emulator upgrade test covering old/recent readings, nulls, timestamps, preferences, the full-history backup and isolation of CSV imports.
+The GitHub release APK is the production-signed update for version 1.5. Install it in place without uninstalling or clearing storage. Existing history is read directly; CSV import is not needed for an upgrade. Export the current History CSV to Drive first as an extra copy. Release publication is gated on certificate matching and an actual 1.5-to-2.1.0 emulator upgrade test covering old/recent readings, nulls, timestamps, preferences, the full-history backup and isolation of CSV imports.
 
 **Ramping** and **T4 Wait** provide a page for each of the ten metro hospitals, with Previous/Next controls. Ramping compares the source's current calendar month with the same month in the prior three years using hours per calendar day; current month-to-date rates are explicitly provisional against complete historical months. Red up / green down compares with the previous year's rate. Missing comparisons have no directional arrow. Totals and denominators remain available in details.
 
@@ -84,3 +84,7 @@ Source reports can lag today. The app shows individual source dates, last succes
 ## Roster comparisons
 
 Roster colours use the user-confirmed continuous eight-day cycle anchored to 18 September 2026: two days each of Black/Blue, Green/Black, Red/Green and Blue/Red (day/night). Day is 07:00–18:00 Perth; night is 18:00–07:00, assigned to its starting date. Comparisons use local source timestamps and the median of per-shift T4 reading medians, with equal weight per observed shift. Coverage is displayed; seven observed shifts per colour is a caution threshold, not a significance test. Daily/monthly archive values are not assigned to shifts. The roster module and tests keep these rules explicit for later revision.
+
+## App-first navigation
+
+The launcher opens Highlights. Four bottom navigation pages are Highlights, Ramping, T4 Wait and Roster. More retains Archive explorer, widget settings, saved history/CSV, imports, backup and report export. The app is labelled WA ED Insights; its production package, certificate and widget remain compatible. Highlights recompute daily response changes and rank same-month ramping rate differences from available public reports. Ramping also compares the previous three consecutive months using hours per day; T4 has hourly horizontal guides while retaining minutes as its data unit.

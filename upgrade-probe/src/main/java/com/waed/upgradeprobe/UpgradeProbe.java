@@ -51,8 +51,9 @@ public class UpgradeProbe extends Instrumentation {
                 require("verify".equals(mode),"Unknown mode");
                 String before=new String(java.nio.file.Files.readAllBytes(reference.toPath()),StandardCharsets.UTF_8);
                 require(before.equals(snapshot(c)),"History or preference changed during installation");
+                ActivityMonitor home=addMonitor("com.waed.widget.AnalysisActivity",null,false);
                 startActivitySync(new Intent().setClassName(c,"com.waed.widget.MainActivity").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                startActivitySync(new Intent().setClassName(c,"com.waed.widget.AnalysisActivity").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                require(waitForMonitorWithTimeout(home,10000)!=null,"Launcher did not open the focused app");removeMonitor(home);
                 File backup=new File(c.getFilesDir(),"history-backups/widget-history-v2-first-open.zip");
                 long deadline=System.currentTimeMillis()+30000;while(!backup.exists()&&System.currentTimeMillis()<deadline)Thread.sleep(200);
                 require(backup.exists(),"Analysis did not create the first-open safety backup");

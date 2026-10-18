@@ -8,7 +8,7 @@ function latest(rows){const m=new Map();for(const o of rows){const k=key(o),p=m.
 function stats(rows){const valid=rows.filter(r=>Number.isFinite(r.source_time)&&r.source_time>0&&Number.isFinite(r.wait));let times=[...new Set(valid.map(r=>r.source_time))].sort((a,b)=>a-b);let gaps=0;for(let i=1;i<times.length;i++)if(times[i]-times[i-1]>90*60000)gaps++;return {valid,unparsed:rows.length-valid.length,days:new Set(times.map(t=>new Date(t+8*3600000).toISOString().slice(0,10))).size,gaps,median:quantile(valid.map(r=>r.wait),.5),p90:quantile(valid.map(r=>r.wait),.9)}}
 const api={quantile,latest,stats,key};if(typeof module!=='undefined')module.exports=api;if(!root.document)return;
 let data,observations,hospital='',series='',source='sjwa-ramping',entity='royal-perth',mode='highlights',slideIndex=0;
-const hospitalIndexes={ramping:0,t4:0,roster:0};let rosterType='Day';
+const hospitalIndexes={ramping:0,t4:0,roster:0};let rosterType='Day',insightIndex=0;
 function bindTabs(){for(const id of ['highlights','explorer','ramping','t4','roster']){const b=document.getElementById(id);b.classList.toggle('active',mode===id);b.setAttribute('aria-pressed',String(mode===id));b.onclick=()=>{mode=id;render()}}}
 const card=(title,body)=>'<section class="card"><h2>'+title+'</h2>'+body+'</section>';
 const stat=(value,label)=>'<div class="stat"><strong>'+esc(value)+'</strong>'+esc(label)+'</div>';
@@ -43,6 +43,14 @@ function slideChoices(){
  return choices;
 }
 function render(){
+ document.getElementById('page-title').textContent=({highlights:'Highlights',ramping:'Ramping',t4:'T4 Wait',roster:'Roster',explorer:'Archive explorer'})[mode];
+ if(mode==='highlights'){
+  const cards=root.Insights.build(observations,root.HospitalPages);insightIndex=Math.max(0,Math.min(insightIndex,cards.length-1));
+  document.getElementById('content').innerHTML=root.Insights.render(cards,insightIndex);
+  if(cards.length){document.getElementById('insight-prev').onclick=()=>{insightIndex--;render()};document.getElementById('insight-next').onclick=()=>{insightIndex++;render()};}
+  bindTabs();return;
+ }
+
  if(mode==='roster'){
   document.getElementById('content').innerHTML=root.Roster.render(hospitalIndexes.roster,rosterType,data.widget.rows||[],root.HospitalPages.hospitals);
   document.getElementById('roster-prev').onclick=()=>{hospitalIndexes.roster=Math.max(0,hospitalIndexes.roster-1);render()};
@@ -115,6 +123,7 @@ function render(){
  bindTabs();
 }
 
+root.showPage=page=>{if(['highlights','ramping','t4','roster','explorer'].includes(page)){mode=page;render();}};
 root.receive=d=>{data=d;observations=latest(d.archives.batches.flatMap(b=>b.observations||[]));render()};
 root.reportHtml=()=>{const content=document.getElementById('content').cloneNode(true);content.querySelectorAll('select,label,button,.navigation').forEach(e=>e.remove());content.querySelectorAll('details').forEach(e=>e.setAttribute('open',''));return '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WA ED analysis report</title><style>'+document.querySelector('style').textContent+'</style><h1>WA ED · Analysis report</h1>'+content.innerHTML+'</html>'};
 })(typeof window==='undefined'?globalThis:window);

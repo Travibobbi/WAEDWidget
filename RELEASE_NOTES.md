@@ -1,9 +1,10 @@
-# New in 2.0.5
+# New in 2.1.0 — WA ED Insights
 
-- Adds a Roster page with one page per metro hospital, separate day/night views, and Black/Green/Red/Blue comparison bars for captured T4 waits.
-- Uses the user-confirmed continuous eight-day cycle anchored to 18 September 2026: Black days/Blue nights, Green/Black, Red/Green, Blue/Red, each for two days. Days are 07:00–18:00 Perth; nights are 18:00–07:00 and belong to their starting date.
-- Compares the median of each shift's captured-reading median, giving each observed shift equal weight. Repeated timestamps are deduplicated, missing observations are not zero, and coverage shows shifts, samples and sampled hour slots.
-- Marks limited coverage and explains that roster timing is not a measure of crew performance. Daily ED totals and monthly SJWA reports are not attributed to shifts.
-- Roster analysis uses existing local history and refreshes with the other tabs. It does not change or upload the widget log.
+The app now opens directly into Highlights, with four main pages in bottom navigation: Highlights, Ramping, T4 Wait and Roster. The existing home-screen widget remains available. Archive explorer, widget settings, saved history, imports, backups and report export are under More.
 
-Install WAEDWidget-v2.0.5.apk over the existing app without uninstalling or clearing storage. The production identity and signing certificate are unchanged. Release tests verify the actual 1.5 in-place upgrade, preserved history and live report downloads.
+- Highlights: recomputed from each available St John report, showing daily response percentages and previous-day changes where available, plus the largest same-month ramping daily-rate differences. Missing days are not treated as daily changes or connected on the chart.
+- Ramping: retains current-month vs the same month in previous years and adds the previous three consecutive months. Both use hours per day so partial totals and unequal month lengths do not create misleading comparisons. Current-month labels and estimates remain provisional.
+- T4 Wait: retains both existing series and adds horizontal reference lines every hour, labelled 1 h, 2 h, etc. Values and exact comparisons remain in minutes.
+- Roster: retains colour, day/night, hospital and coverage comparisons within the new navigation.
+
+Install WAEDWidget-v2.1.0.apk over the existing app. It is now labelled WA ED Insights but keeps the same production package, signing certificate, widget resources and history database. Do not uninstall or clear storage. Release checks verify the actual 1.5 in-place upgrade, saved history, new launcher destination and live report downloads.

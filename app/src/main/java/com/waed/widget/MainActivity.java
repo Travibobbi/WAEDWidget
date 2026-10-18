@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ArchiveSyncJob.schedule(this);
+        if(!getIntent().getBooleanExtra("widget_settings",false)&&!getIntent().getBooleanExtra(EXTRA_SHOW_WAIT_INFO,false)){startActivity(new Intent(this,AnalysisActivity.class));finish();return;}
         setContentView(R.layout.activity_main);
 
         Button add = findViewById(R.id.add_widget);

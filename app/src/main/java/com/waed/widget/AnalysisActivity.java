@@ -22,13 +22,21 @@ public class AnalysisActivity extends Activity {
     @Override public void onCreate(Bundle saved){super.onCreate(saved);
         LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(0xfff4f7f5);
         LinearLayout bar=new LinearLayout(this);bar.setOrientation(LinearLayout.HORIZONTAL);
-        button(bar,"Back",()->finish());button(bar,"Refresh",()->refresh(true));button(bar,"Import",()->choose(IMPORT,"*/*",""));button(bar,"Backup",()->choose(BACKUP,"application/zip","WAEDWidget-first-open-backup.zip"));
-        button(bar,"Report",()->web.evaluateJavascript("window.reportHtml ? window.reportHtml() : ''",v->{try{pendingReport=(String)new JSONTokener(v).nextValue();if(!pendingReport.isEmpty())choose(REPORT,"text/html","WAED-analysis-report.html");}catch(Exception e){status.setText("Report is not ready yet.");}}));root.addView(bar);
-        status=new TextView(this);status.setPadding(16,8,16,8);status.setText("Preparing a safety copy and reading history…");root.addView(status);
+        TextView title=new TextView(this);title.setText("WA ED Insights");title.setTextSize(20);title.setTextColor(0xff17392f);title.setPadding(16,12,8,12);bar.addView(title,new LinearLayout.LayoutParams(0,-2,2));
+        button(bar,"Refresh",()->refresh(true));button(bar,"More",()->showTools());root.addView(bar);
+        status=new TextView(this);status.setTextSize(11);status.setPadding(16,4,16,4);status.setText("Preparing a safety copy and reading history…");root.addView(status);
         web=new WebView(this);web.setBackgroundColor(0xfff4f7f5);web.getSettings().setJavaScriptEnabled(true);web.getSettings().setAllowFileAccess(false);web.getSettings().setAllowContentAccess(false);
         web.setWebViewClient(new WebViewClient(){@Override public boolean shouldOverrideUrlLoading(WebView v,String url){return true;}@Override public void onPageFinished(WebView v,String url){if(url.equals("file:///android_asset/analysis/index.html")){pageReady=true;load();refresh(false);}}});
         root.addView(web,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);web.loadUrl("file:///android_asset/analysis/index.html");
     }
+    private void showTools(){new android.app.AlertDialog.Builder(this).setTitle("Tools and history").setItems(new String[]{"Archive explorer","Widget settings","Saved history / export CSV","Import data","Export safety backup","Export this report"},(dialog,which)->{switch(which){
+        case 0:web.evaluateJavascript("window.showPage('explorer')",null);break;
+        case 1:startActivity(new Intent(this,MainActivity.class).putExtra("widget_settings",true));break;
+        case 2:startActivity(new Intent(this,HistoryActivity.class));break;
+        case 3:choose(IMPORT,"*/*","");break;
+        case 4:choose(BACKUP,"application/zip","WAEDWidget-first-open-backup.zip");break;
+        case 5:web.evaluateJavascript("window.reportHtml ? window.reportHtml() : ''",v->{try{pendingReport=(String)new JSONTokener(v).nextValue();if(!pendingReport.isEmpty())choose(REPORT,"text/html","WAED-analysis-report.html");}catch(Exception e){status.setText("Report is not ready yet.");}});break;
+    }}).show();}
     private void button(LinearLayout bar,String title,Runnable action){Button b=new Button(this);b.setText(title);b.setTextSize(12);b.setPadding(2,2,2,2);bar.addView(b,new LinearLayout.LayoutParams(0,-2,1));b.setOnClickListener(v->action.run());}
     private void ui(Runnable action){runOnUiThread(()->{if(!isFinishing()&&!isDestroyed())action.run();});}
     private void load(){worker.execute(()->{try{AnalysisRepository.backup(this);JSONObject data=new JSONObject().put("widget",AnalysisRepository.widget(this)).put("archives",AnalysisRepository.archives(this));String payload=JSONObject.quote(data.toString()),freshness=ArchiveSync.status(this);ui(()->{if(isFinishing())return;web.evaluateJavascript("window.receive(JSON.parse("+payload+"))",null);status.setText(freshness);});}catch(Exception e){ui(()->status.setText("Could not load analysis: "+e.getMessage()+". Widget history is unchanged."));}});}
