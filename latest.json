@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-10-29T10:53:00.663Z",
+  "generated_at_utc": "2026-10-30T10:51:11.819Z",
   "source_dates": {
-    "wa-health-ed-daily": "2026-10-28",
-    "sjwa-response": "2026-10-28",
-    "sjwa-ramping": "2026-10-28"
+    "wa-health-ed-daily": "2026-10-29",
+    "sjwa-response": "2026-10-29",
+    "sjwa-ramping": "2026-10-29"
   },
-  "path": "snapshots/20261029T105300663Z-72e00b46-6fa5-4a40-b360-e7338dc55ac4.json.gz",
-  "sha256": "cf8fea1d6ef8929d9b5c6e65c76e74ec7801cd56233657218e99b869a6875e7f",
-  "bytes": 7343207,
-  "observations": 12503,
-  "evidence_path": "captures/2026-10/20261029T105300663Z-72e00b46-6fa5-4a40-b360-e7338dc55ac4.json.gz",
-  "evidence_sha256": "bb8c2cbd398eb33ed688fa6da86c478f2bb1514c7eb7ff3890df2f181dd8aa11"
+  "path": "snapshots/20261030T105111819Z-dd9ab060-c8e1-4fff-b37b-3da189ddfc0b.json.gz",
+  "sha256": "06e44bdd92925aabb2770c6eeeed46cce0f3eb87f78628a243af4e45fda3b8ee",
+  "bytes": 7630397,
+  "observations": 12999,
+  "evidence_path": "captures/2026-10/20261030T105111819Z-dd9ab060-c8e1-4fff-b37b-3da189ddfc0b.json.gz",
+  "evidence_sha256": "3639164f3bae2734948d3cdcc796e2fe9d7af18ab59dbd3c199d15cb762ca307"
 }
