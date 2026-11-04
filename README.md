@@ -81,6 +81,8 @@ Android downloads on Analysis open (hourly check limit), every 12 hours when per
 
 Source reports can lag today. The app shows individual source dates, last successful check and stale/error state. Private Drive archives continue independently and can be imported for earlier daily coverage.
 
+The SJWA collector supports both legacy Power BI visual metadata and the PBIR report format introduced by the source on 1 November 2026. Required visual IDs, fields, aggregations, labels and sort definitions are validated before querying. Failed collections preserve their raw responses and failure manifest without advancing the last valid feed. Regression tests include reduced public metadata from both migrated SJWA reports.
+
 ## Roster comparisons
 
 Roster colours use the user-confirmed continuous eight-day cycle anchored to 18 September 2026: two days each of Black/Blue, Green/Black, Red/Green and Blue/Red (day/night). Day is 07:00–18:00 Perth; night is 18:00–07:00, assigned to its starting date. Comparisons use local source timestamps and the median of per-shift T4 reading medians, with equal weight per observed shift. Coverage is displayed; seven observed shifts per colour is a caution threshold, not a significance test. Daily/monthly archive values are not assigned to shifts. The roster module and tests keep these rules explicit for later revision.
