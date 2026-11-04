@@ -1,0 +1,106 @@
+{
+  "exploration": {
+    "sections": [
+      {
+        "visualContainers": [
+          {
+            "objectName": "1ad283706d1d72a45737"
+          },
+          {
+            "objectName": "b1e64ca0777c278a0610"
+          },
+          {
+            "objectName": "23644bf5502ace7664c3"
+          },
+          {
+            "objectName": "ffb60fb33d030da330a4"
+          },
+          {
+            "objectName": "d5c83e81c76702c2d206"
+          },
+          {
+            "objectName": "6737a8d076cb1ee70de3"
+          },
+          {
+            "objectName": "b4ffa570b17e9c731417"
+          },
+          {
+            "objectName": "9a2f194318740bee5bd4"
+          },
+          {
+            "objectName": "0da8cddd8791e275ddd7"
+          },
+          {
+            "objectName": "b8d12b472a5a50c66d19"
+          },
+          {
+            "objectName": "afa50b637e0de34db676"
+          },
+          {
+            "objectName": "edaa1d70984221e2ed92"
+          },
+          {
+            "objectName": "a2c5bc10ddee58a3b1b0"
+          },
+          {
+            "objectName": "6ff5f6bc6ed0979240aa"
+          },
+          {
+            "objectName": "73f4264907750c207103"
+          },
+          {
+            "objectName": "48bf6927e90b3c51ab30"
+          },
+          {
+            "objectName": "aaeca3cce4ed45022ec8"
+          },
+          {
+            "objectName": "96729e7ee0ee80950000"
+          },
+          {
+            "objectName": "f3bf65f70ec0b322de67"
+          },
+          {
+            "objectName": "d081547060a00901860a"
+          },
+          {
+            "objectName": "8322ee9cb3beaac949b0"
+          },
+          {
+            "objectName": "8211a25065d611d4ce50"
+          },
+          {
+            "objectName": "eb02dcc60e6ab7a4b0d9"
+          },
+          {
+            "objectName": "8aed7f852594b7d01922"
+          },
+          {
+            "objectName": "3653e08198c3d12196e1"
+          },
+          {
+            "objectName": "646553d70c210be253ce"
+          },
+          {
+            "objectName": "47d9dff9b3b357403e30"
+          },
+          {
+            "objectName": "c3a51c33c30d22b0d0a6"
+          },
+          {
+            "objectName": "0dcc67d4480e09b952d4"
+          },
+          {
+            "objectName": "ac797f61d718cc4fb76a"
+          },
+          {
+            "objectName": "67162383690b95a04710"
+          }
+        ]
+      }
+    ],
+    "explorationContent": {
+      "explorationDocument": "{\"pages\": {\"pages\": [{\"filePath\": \"ReportSection/page.json\", \"visualContainers\": [{\"content\": {\"name\": \"b4ffa570b17e9c731417\", \"visual\": {\"query\": {\"queryState\": {\"Category\": {\"projections\": [{\"field\": {\"HierarchyLevel\": {\"Expression\": {\"Hierarchy\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Hierarchy\": \"Hospital Region Hierarchy\"}}, \"Level\": \"Hospital Region\"}}, \"queryRef\": \"MetroAmb WebsiteRampingData.Hospital Region Hierarchy.Hospital Region\", \"active\": true}, {\"field\": {\"HierarchyLevel\": {\"Expression\": {\"Hierarchy\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Hierarchy\": \"Hospital Region Hierarchy\"}}, \"Level\": \"Hospital\"}}, \"queryRef\": \"MetroAmb WebsiteRampingData.Hospital Region Hierarchy.Hospital\", \"active\": true}]}, \"Y\": {\"projections\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Property\": \"Average Ramped Hours Previous FYTD\"}}, \"Function\": 0}}, \"queryRef\": \"Sum(MetroAmb WebsiteRampingData.Average Ramped Hours Previous FYTD)\", \"displayName\": \"Previous FYTD Weekly Average\"}, {\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Property\": \"Average Ramped Hours FYTD\"}}, \"Function\": 0}}, \"queryRef\": \"Sum(MetroAmb WebsiteRampingData.Average Ramped Hours FYTD)\", \"displayName\": \"Current FYTD Weekly Average\"}, {\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Property\": \"Ramped Hours Last 7 Days\"}}, \"Function\": 0}}, \"queryRef\": \"Sum(MetroAmb WebsiteRampingData.Ramped Hours Yesterday)\", \"displayName\": \"Last 7 Days\"}]}}}}}}, {\"content\": {\"name\": \"afa50b637e0de34db676\", \"visual\": {\"query\": {\"queryState\": {\"Category\": {\"projections\": [{\"field\": {\"HierarchyLevel\": {\"Expression\": {\"Hierarchy\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Hierarchy\": \"Hospital Region Hierarchy\"}}, \"Level\": \"Hospital Region\"}}, \"queryRef\": \"MetroAmb WebsiteRampingData.Hospital Region Hierarchy.Hospital Region\", \"active\": true}, {\"field\": {\"HierarchyLevel\": {\"Expression\": {\"Hierarchy\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Hierarchy\": \"Hospital Region Hierarchy\"}}, \"Level\": \"Hospital\"}}, \"queryRef\": \"MetroAmb WebsiteRampingData.Hospital Region Hierarchy.Hospital\", \"active\": true}]}, \"Y\": {\"projections\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Property\": \"Total Ramped Hours Previous FYTD\"}}, \"Function\": 0}}, \"queryRef\": \"Sum(MetroAmb WebsiteRampingData.Total Ramped Hours Previous FYTD)\", \"displayName\": \"Previous FYTD Total\"}, {\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Property\": \"Total Ramped Hours FYTD\"}}, \"Function\": 0}}, \"queryRef\": \"Sum(MetroAmb WebsiteRampingData.Total Ramped Hours FYTD)\", \"displayName\": \"Current FYTD Total\"}]}}}}}}, {\"content\": {\"name\": \"edaa1d70984221e2ed92\", \"visual\": {\"query\": {\"queryState\": {\"Category\": {\"projections\": [{\"field\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingTrendData\"}}, \"Property\": \"Month\"}}, \"queryRef\": \"MetroAmb WebsiteRampingTrendData.Month\", \"active\": true}]}, \"Series\": {\"projections\": [{\"field\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingTrendData\"}}, \"Property\": \"Hospital\"}}, \"queryRef\": \"MetroAmb WebsiteRampingTrendData.Hospital\"}]}, \"Y\": {\"projections\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingTrendData\"}}, \"Property\": \"ramped_hours\"}}, \"Function\": 0}}, \"queryRef\": \"Sum(MetroAmb WebsiteRampingTrendData.ramped_hours)\", \"displayName\": \"# Ramped Hours\"}]}}, \"sortDefinition\": {\"sort\": [{\"field\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingTrendData\"}}, \"Property\": \"Month\"}}, \"direction\": \"Ascending\"}], \"isDefaultSort\": true}}}}}, {\"content\": {\"name\": \"ac797f61d718cc4fb76a\", \"visual\": {\"query\": {\"queryState\": {\"Values\": {\"projections\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Property\": \"DataDate\"}}, \"Function\": 3}}, \"queryRef\": \"Min(MetroAmb WebsiteRampingData.DataDate)\", \"nativeQueryRef\": \"Earliest DataDate\"}]}}, \"sortDefinition\": {\"sort\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteRampingData\"}}, \"Property\": \"DataDate\"}}, \"Function\": 3}}, \"direction\": \"Ascending\"}], \"isDefaultSort\": true}}}}}]}], \"pagesMetadata\": {\"filePath\": \"pages/pages.json\", \"content\": {\"$schema\": \"https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json\", \"pageOrder\": [\"ReportSection\"], \"activePageName\": \"ReportSection\"}}}}"
+    }
+  }
+}

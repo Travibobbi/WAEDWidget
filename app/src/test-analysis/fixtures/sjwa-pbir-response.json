@@ -1,0 +1,40 @@
+{
+  "exploration": {
+    "sections": [
+      {
+        "visualContainers": [
+          {
+            "objectName": "563cb38724e703bc9d1b"
+          },
+          {
+            "objectName": "d62228c50ab0ca364599"
+          },
+          {
+            "objectName": "780385c8c0e1bc7e9a90"
+          },
+          {
+            "objectName": "8768952e099177d570ea"
+          },
+          {
+            "objectName": "2801f6a68a074b379130"
+          },
+          {
+            "objectName": "10619d36cc1ec1d689d3"
+          },
+          {
+            "objectName": "45b88390ea1056a4d5a0"
+          },
+          {
+            "objectName": "caf0b933add1ea17b16c"
+          },
+          {
+            "objectName": "44cecb9c428632833026"
+          }
+        ]
+      }
+    ],
+    "explorationContent": {
+      "explorationDocument": "{\"pages\": {\"pages\": [{\"filePath\": \"ReportSection29baf9fa9d8883c60dbb/page.json\", \"visualContainers\": [{\"content\": {\"name\": \"563cb38724e703bc9d1b\", \"visual\": {\"query\": {\"queryState\": {\"TargetValue\": {\"projections\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteResponseData\"}}, \"Property\": \"Target_Percent\"}}, \"Function\": 0}}, \"queryRef\": \"Sum(MetroAmb WebsiteResponseData.Target_Percent)\"}]}, \"Y\": {\"projections\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteResponseData\"}}, \"Property\": \"Percent_Met_Target\"}}, \"Function\": 0}}, \"queryRef\": \"Sum(MetroAmb WebsiteResponseData.Percent_Met_Target)\"}]}}, \"sortDefinition\": {\"sort\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteResponseData\"}}, \"Property\": \"Percent_Met_Target\"}}, \"Function\": 0}}, \"direction\": \"Descending\"}], \"isDefaultSort\": true}}}}}, {\"content\": {\"name\": \"10619d36cc1ec1d689d3\", \"visual\": {\"query\": {\"queryState\": {\"Category\": {\"projections\": [{\"field\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteResponseTrendData\"}}, \"Property\": \"Month\"}}, \"queryRef\": \"MetroAmb WebsiteResponseTrendData.Month\", \"active\": true}]}, \"Y\": {\"projections\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteResponseTrendData\"}}, \"Property\": \"Number of Cases\"}}, \"Function\": 0}}, \"queryRef\": \"Sum(MetroAmb WebsiteResponseTrendData (2).Number of Cases)\", \"displayName\": \"# Cases\"}]}, \"Y2\": {\"projections\": [{\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteResponseTrendData\"}}, \"Property\": \"Target_Percent\"}}, \"Function\": 1}}, \"queryRef\": \"Sum(MetroAmb WebsiteResponseTrendData (2).Target_Percent)\", \"displayName\": \"% Target\"}, {\"field\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteResponseTrendData\"}}, \"Property\": \"Response Performance MIS\"}}, \"Function\": 1}}, \"queryRef\": \"Sum(MetroAmb WebsiteResponseTrendData (2).Response Performance MIS)\", \"displayName\": \"% Response Performance\"}]}}, \"sortDefinition\": {\"sort\": [{\"field\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Entity\": \"MetroAmb WebsiteResponseTrendData\"}}, \"Property\": \"Month\"}}, \"direction\": \"Ascending\"}], \"isDefaultSort\": true}}}}}]}], \"pagesMetadata\": {\"filePath\": \"pages/pages.json\", \"content\": {\"$schema\": \"https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json\", \"pageOrder\": [\"ReportSection29baf9fa9d8883c60dbb\"], \"activePageName\": \"ReportSection29baf9fa9d8883c60dbb\"}}}}"
+    }
+  }
+}
