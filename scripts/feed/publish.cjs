@@ -12,16 +12,24 @@ function merge(previous,incoming,now){
  return [...map.values()].filter(o=>o.period_type==='month'||(o.as_of_date||o.reporting_date)>=cutoff).map(o=>Object.fromEntries(fields.filter(k=>o[k]!==undefined).map(k=>[k,o[k]])));
 }
 function writeNew(root,p,bytes){const f=path.join(root,Ed.cleanPath(p));fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,bytes,{flag:'wx'});}
-function capture(core,config){const files={};let pointer;const m=core.capture({now:()=>new Date().toISOString(),uuid:()=>crypto.randomUUID(),sha256:hash,writeNew:(p,t)=>{if(files[p])throw Error('Duplicate capture file');files[p]=t;},publishLatest:p=>pointer=p,http:(url,body,headers)=>{
+function capture(core,config){const files={};let pointer,m;try{m=core.capture({now:()=>new Date().toISOString(),uuid:()=>crypto.randomUUID(),sha256:hash,writeNew:(p,t)=>{if(files[p])throw Error('Duplicate capture file');files[p]=t;},publishLatest:p=>pointer=p,http:(url,body,headers)=>{
  const child=spawnSync(process.execPath,[__filename,'--http'],{input:JSON.stringify({url,body,headers}),encoding:'utf8',timeout:180000,maxBuffer:20*1024*1024});if(child.error||child.status)throw Error(child.error?.message||child.stderr);return JSON.parse(child.stdout);
-}},config);return {manifest:m,files,observations:JSON.parse(files[pointer.observations_path]).observations};}
+}},config);return {manifest:m,files,observations:JSON.parse(files[pointer.observations_path]).observations};
+ }catch(error){
+  // A failed collector still has useful source responses and a failure manifest.
+  // Return them to publish(), which saves evidence before rejecting this capture.
+  const manifestPath=Object.keys(files).find(p=>p.endsWith('/manifest.json'));
+  const saved=manifestPath?JSON.parse(files[manifestPath]):{};
+  return {manifest:{...saved,source_id:core.SOURCE,status:'failed',error:String(error.message||error)},files,observations:[]};
+ }
+}
 function fromDisk(root){const pointer=JSON.parse(fs.readFileSync(path.join(root,'latest.json'))),manifest=JSON.parse(fs.readFileSync(path.join(root,pointer.manifest_path))),prefix=path.dirname(pointer.manifest_path),files={};for(const f of fs.readdirSync(path.join(root,prefix)))files[prefix+'/'+f]=fs.readFileSync(path.join(root,prefix,f),'utf8');return {manifest,files,observations:JSON.parse(files[pointer.observations_path]).observations};}
 function publish(root,captures,now=new Date().toISOString()){
  fs.mkdirSync(root,{recursive:true});
  // Immutable evidence is written even when freshness validation prevents publication.
  const id=now.replace(/[-:.]/g,'')+'-'+crypto.randomUUID();const evidence=zlib.gzipSync(JSON.stringify({schema_version:1,captures}),{level:9});
  const evidencePath='captures/'+now.slice(0,7)+'/'+id+'.json.gz';writeNew(root,evidencePath,evidence);
- const sources={};for(const c of captures){if(c.manifest.status!=='complete'||c.manifest.warnings?.length)throw Error('Source incomplete/stale: '+c.manifest.source_id);for(const o of c.observations){const date=o.as_of_date||o.reporting_date;sources[o.source_id]=date>=(sources[o.source_id]||'')?date:sources[o.source_id];}}
+ const sources={};for(const c of captures){if(c.manifest.status!=='complete'||c.manifest.warnings?.length)throw Error('Source incomplete/stale: '+c.manifest.source_id+(c.manifest.error?' — '+c.manifest.error:''));for(const o of c.observations){const date=o.as_of_date||o.reporting_date;sources[o.source_id]=date>=(sources[o.source_id]||'')?date:sources[o.source_id];}}
  for(const source of ['wa-health-ed-daily','sjwa-response','sjwa-ramping'])if(!sources[source]||Date.parse(now)-Date.parse(sources[source]+'T00:00:00+08:00')>3*86400000)throw Error('Missing/stale source '+source);
  const latestPath=path.join(root,'latest.json');const prior=fs.existsSync(latestPath)?JSON.parse(fs.readFileSync(latestPath)):null;
  if(prior)for(const k of Object.keys(sources))if(sources[k]<prior.source_dates[k])throw Error('Source reporting date regressed');
@@ -37,4 +45,4 @@ if(require.main===module){
  if(process.argv[2]==='--http') (async()=>{const {url,body,headers}=JSON.parse(fs.readFileSync(0,'utf8'));let last;for(let n=0;n<3;n++){try{const r=await fetch(url,{method:body?'POST':'GET',headers:{...headers,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(45000)});if(r.status===429||r.status>=500)throw Error('HTTP '+r.status);process.stdout.write(JSON.stringify({status:r.status,text:await r.text()}));return;}catch(e){last=e;await new Promise(r=>setTimeout(r,2000*(n+1)));}}throw last;})().catch(e=>{console.error(e.message);process.exitCode=1;});
  else{const root=path.resolve(process.argv[2]),disk=process.argv[3];publish(root,disk?[fromDisk(path.join(disk,'ed')),fromDisk(path.join(disk,'sjwa'))]:[capture(Ed),capture(Sj,Config)]);}
 }
-module.exports={merge,key,publish};
+module.exports={merge,key,publish,capture};
