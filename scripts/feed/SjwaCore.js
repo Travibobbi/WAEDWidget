@@ -1,7 +1,7 @@
 /* Portable SJWA collector. All persisted dates use ISO strings; no Google IDs. */
 var SjwaArchive=(function(){
  'use strict';
- const VERSION='1.0.0',SOURCE='sjwa',PAGE='https://www.stjohnwa.com.au/ambulance-and-health-services/metro-ambulance-service/ambulance-activity-and-response-times';
+ const VERSION='1.1.0',SOURCE='sjwa',PAGE='https://www.stjohnwa.com.au/ambulance-and-health-services/metro-ambulance-service/ambulance-activity-and-response-times';
  const keys=['4b4aac0c-b762-4348-96cc-2585ccff6f18','3e399aba-a990-4e78-9be5-ea256ba206de'];
  const reports=['https://app.powerbi.com/view?r=eyJrIjoiNGI0YWFjMGMtYjc2Mi00MzQ4LTk2Y2MtMjU4NWNjZmY2ZjE4IiwidCI6IjFhZTg5MTgwLTY3ZmMtNDFkZi1hMWEwLWNlNDFhZDU5OGY2YiJ9','https://app.powerbi.com/view?r=eyJrIjoiM2UzOTlhYmEtYTk5MC00ZTc4LTliZTUtZWEyNTZiYTIwNmRlIiwidCI6IjFhZTg5MTgwLTY3ZmMtNDFkZi1hMWEwLWNlNDFhZDU5OGY2YiJ9'];
  const aliases={'Albany Regional Hospital':'albany','Armadale/Kelmscott Hospital':'armadale','Broome Hospital':'broome','Bunbury Regional Hospital':'bunbury','Fiona Stanley Hospital':'fiona-stanley','Geraldton Regional Hospital':'geraldton','Hedland Health Campus':'hedland','Joondalup Health Campus':'joondalup','Kalgoorlie Regional Hospital':'kalgoorlie','King Edward Memorial Hospital':'king-edward','Northam Regional Hospital':'northam','Peel Health Campus':'peel','Perth Childrens Hospital':'perth-childrens','Princess Margaret Hospital':'princess-margaret','Rockingham Hospital':'rockingham','Royal Perth Hospital':'royal-perth','Sir Charles Gairdner Hospital':'sir-charles-gairdner','St John of God Midland':'midland','St John of God Midland Hospital':'midland'};
@@ -55,7 +55,50 @@ var SjwaArchive=(function(){
   return {schema_version:1,source_id:SOURCE,capture_id:context.capture_id,captured_at_utc:context.captured_at_utc,reporting_dates:[...new Set([current,latestResponse])].sort(),observations:out};
  }
  function queryBody(m,def){return {version:'1.0.0',modelId:m.models[0].id,cancelQueries:[],queries:[{QueryId:'',ApplicationContext:{DatasetId:m.models[0].dbName,Sources:[{ReportId:m.exploration.report.objectId,VisualId:def.visualId}]},Query:{Commands:[{SemanticQueryDataShapeCommand:{Query:def.query,Binding:{Primary:{Groupings:[{Projections:def.query.Select.map((_,i)=>i)}]},DataReduction:{DataVolume:3,Primary:{Window:{Count:10000}}},Version:1},ExecutionMetricsKind:1}}]}}]};}
- function validateMetadata(m,defs){const visuals=m.exploration.sections.flatMap(s=>s.visualContainers);for(const def of defs){const v=visuals.find(v=>JSON.parse(v.config).name===def.visualId);assert(v,'Visual missing');const c=JSON.parse(v.config);assert(JSON.stringify(c.singleVisual.prototypeQuery)===JSON.stringify(def.prototype),'Source query changed: '+def.name);const labels=JSON.parse(v.dataTransforms).selects.map(x=>({name:x.queryName,label:x.displayName}));assert(JSON.stringify(labels)===JSON.stringify(def.labels),'Source labels changed: '+def.name);}}
+ // PBIR stores visual definitions in explorationDocument rather than config/dataTransforms.
+ // Compare semantic fields by queryRef; role order and source aliases are presentation details.
+ function canonical(value){
+  if(Array.isArray(value))return value.map(canonical);
+  if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(k=>[k,canonical(value[k])]));
+  return value;
+ }
+ function same(a,b){return JSON.stringify(canonical(a))===JSON.stringify(canonical(b));}
+ function pbirField(value,from){
+  if(Array.isArray(value))return value.map(v=>pbirField(v,from));
+  if(!value||typeof value!=='object')return value;
+  return Object.fromEntries(Object.entries(value).map(([k,v])=>{
+   if(k==='SourceRef'&&v.Source){const source=from.find(f=>f.Name===v.Source);assert(source,'Unknown source alias');return [k,{Entity:source.Entity}];}
+   return [k,pbirField(v,from)];
+  }));
+ }
+ function validatePbirVisual(v,def){
+  const query=v.visual?.query,state=query?.queryState;assert(state&&typeof state==='object','Source query missing: '+def.name);
+  const projections=Object.values(state).flatMap(role=>{assert(Array.isArray(role.projections),'Invalid projections: '+def.name);return role.projections;});
+  assert(projections.length===def.prototype.Select.length,'Source query changed: '+def.name);
+  for(const select of def.prototype.Select){
+   const matches=projections.filter(p=>p.queryRef===select.Name);assert(matches.length===1,'Source query changed: '+def.name);
+   const p=matches[0],field=Object.fromEntries(Object.entries(select).filter(([k])=>!['Name','NativeReferenceName'].includes(k)));
+   assert(same(p.field,pbirField(field,def.prototype.From)),'Source query changed: '+def.name);
+   const expected=def.labels.find(l=>l.name===select.Name);assert(expected,'Missing expected label: '+def.name);
+   const expression=field.Aggregation?.Expression||field;
+   const defaultLabel=expression.Column?.Property||expression.Measure?.Property||expression.HierarchyLevel?.Level;
+   assert((p.displayName||p.nativeQueryRef||defaultLabel)===expected.label,'Source labels changed: '+def.name);
+  }
+  const sorts=(def.prototype.OrderBy||[]).map(s=>({field:pbirField(s.Expression,def.prototype.From),direction:s.Direction===1?'Ascending':'Descending'}));
+  assert(same(query.sortDefinition?.sort||[],sorts),'Source sort changed: '+def.name);
+ }
+ function validateMetadata(m,defs){
+  const document=m.exploration?.explorationContent?.explorationDocument;
+  if(document){
+   const parsed=typeof document==='string'?JSON.parse(document):document;
+   assert(Array.isArray(parsed.pages?.pages),'Invalid PBIR pages');
+   const visuals=parsed.pages.pages.flatMap(p=>{assert(Array.isArray(p.visualContainers),'Invalid PBIR visuals');return p.visualContainers.map(v=>v.content);});
+   for(const def of defs){const matches=visuals.filter(v=>v?.name===def.visualId);assert(matches.length===1,'Visual missing/duplicate: '+def.name);validatePbirVisual(matches[0],def);}
+   return;
+  }
+  const visuals=m.exploration.sections.flatMap(s=>s.visualContainers).map(v=>({...v,parsedConfig:v.config?JSON.parse(v.config):null}));
+  for(const def of defs){const matches=visuals.filter(v=>v.parsedConfig?.name===def.visualId);assert(matches.length===1,'Visual missing/duplicate: '+def.name);const v=matches[0],c=v.parsedConfig;assert(same(c.singleVisual.prototypeQuery,def.prototype),'Source query changed: '+def.name);const labels=JSON.parse(v.dataTransforms).selects.map(x=>({name:x.queryName,label:x.displayName}));assert(same(labels,def.labels),'Source labels changed: '+def.name);}
+ }
  function capture(env,defs){const started=env.now(),id=started.replace(/[-:.]/g,'')+'-'+env.uuid(),prefix='captures/'+started.slice(0,4)+'/'+started.slice(5,7)+'/'+id;const files=[];let complete=false;const m={schema_version:1,collector_version:VERSION,source_id:SOURCE,source_url:PAGE,capture_id:id,captured_at_utc:started,files};
   function save(p,text){env.writeNew(prefix+'/'+p,text);files.push({path:p,sha256:env.sha256(text)});}
   function req(name,url,body,key){if(body)save(name+'.request.json',json(body));const r=env.http(url,body,{'X-PowerBI-ResourceKey':key,Accept:'application/json'});save(name+'.response.txt',r.text);save(name+'.http.json',json({url,status:r.status,fetched_at_utc:env.now()}));assert(r.status>=200&&r.status<300,'HTTP '+r.status);return r.text;}
